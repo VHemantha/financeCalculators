@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block calculator_key %}creditCard{% endblock %}
+{% block title %}Credit Card Payoff Calculator 2025 — Minimum vs Extra Payment Comparison{% endblock %}
+{% block meta_description %}Calculate when you'll be debt free and how much interest you'll pay on your credit card. US average APR 21.5%. Compare minimum payments vs extra payments. Free 2025 tool.{% endblock %}
+{% block canonical_path %}/debt/credit-card{% endblock %}
+{% block json_ld %}
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"WebApplication","name":"Credit Card Payoff Calculator","url":"{{ site_url }}/debt/credit-card","applicationCategory":"FinanceApplication","offers":{"@type":"Offer","price":"0"}},
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"How long does it take to pay off credit card debt?","acceptedAnswer":{"@type":"Answer","text":"Making minimum payments (2% of balance) on a $5,000 balance at 21.5% APR takes approximately 25+ years and costs over $9,000 in interest. Paying $250/month instead pays it off in 2.5 years with only $700 in interest — a massive difference."}},
+  {"@type":"Question","name":"What is the average credit card APR in the US in 2025?","acceptedAnswer":{"@type":"Answer","text":"The average credit card APR in the US was approximately 21.5% in 2025, according to Federal Reserve data. Store/retail cards average even higher at 28–30%. Always check your card's specific APR in your statement."}},
+  {"@type":"Question","name":"What is the debt avalanche vs debt snowball method?","acceptedAnswer":{"@type":"Answer","text":"Debt avalanche: pay minimum on all debts, then apply extra payment to highest-APR debt first — mathematically optimal, minimizes total interest paid. Debt snowball: pay off smallest balance first for psychological wins. Avalanche saves more money; snowball may improve motivation to continue."}}
+]}]
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/#cat-debt">Debt</a></li><li aria-current="page">Credit Card Payoff</li></ol></nav>
+    <div class="page-header__inner">
+      <div class="page-header__icon">💳</div>
+      <div>
+        <div class="page-header__category">Debt &amp; Loan Management</div>
+        <h1>Credit Card Payoff Calculator</h1>
+        <p class="page-header__desc">See exactly when you'll be debt-free and how much interest you'll pay — with and without extra monthly payments.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="calc-page">
+  <div class="container">
+    <div class="calc-intro"><p>This credit card payoff calculator shows the shocking reality of minimum payments vs aggressive payoff. With the US average APR at 21.5%, a $5,000 balance paid at minimum rates (2% of balance) takes over 25 years and costs more in interest than the original debt. Enter your balance, APR, and any extra monthly payment to see how much time and money you save. The full amortization schedule shows every payment until you're debt-free.</p></div>
+
+    <div class="calc-layout">
+      <div>
+        <div class="calc-panel">
+          <div class="panel-title">💳 Your Credit Card Debt</div>
+          <form id="creditCard-form" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="cc-balance">Current Balance</label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" class="form-input has-prefix" id="cc-balance" name="balance" value="5000" min="100" step="100">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cc-apr">Annual Percentage Rate (APR) <span class="badge badge--yellow">US Avg: 21.5%</span></label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="cc-apr" name="apr" value="21.5" min="1" max="50" step="0.5">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cc-min-pct">Minimum Payment Rate</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="cc-min-pct" name="minimum_pct" value="2" min="1" max="5" step="0.5">
+                <span class="input-suffix">% of balance</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cc-min-floor">Minimum Payment Floor</label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" class="form-input has-prefix" id="cc-min-floor" name="minimum_floor" value="25" min="10" step="5">
+              </div>
+            </div>
+            <hr class="form-divider">
+            <div class="form-group">
+              <label class="form-label" for="cc-extra">Extra Monthly Payment</label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" class="form-input has-prefix" id="cc-extra" name="extra_payment" value="100" min="0" step="25">
+              </div>
+              <div class="form-hint">Amount paid above the minimum each month</div>
+            </div>
+            <button type="submit" class="btn btn--primary">Calculate Payoff Timeline</button>
+          </form>
+        </div>
+      </div>
+      <div id="results-container">
+        <div class="empty-state"><div class="empty-state__icon">💳</div><p>Enter your credit card details to see how long until you're debt-free and how much interest you'll pay.</p></div>
+      </div>
+    </div>
+
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item"><button class="faq-question">How much does only paying the minimum cost? <span class="faq-icon">+</span></button><div class="faq-answer">Paying only 2% minimum on a $5,000 balance at 21.5% APR takes approximately 26 years and costs ~$9,000 in interest — nearly double the original debt. Even adding $50/month cuts this to 4 years and ~$1,500 in interest. The minimum payment trap is one of the most expensive financial mistakes.</div></div>
+      <div class="faq-item"><button class="faq-question">What is the fastest way to pay off credit card debt? <span class="faq-icon">+</span></button><div class="faq-answer">Pay as much as possible above the minimum — ideally a fixed dollar amount, not a percentage of balance (which shrinks as balance decreases). Use the debt avalanche (highest APR first) for maximum interest savings. Consider balance transfer to a 0% intro APR card for a 12–21 month interest-free payoff period.</div></div>
+      <div class="faq-item"><button class="faq-question">Should I use a balance transfer? <span class="faq-icon">+</span></button><div class="faq-answer">A 0% balance transfer can save thousands in interest if you pay off the balance before the promotional period ends. Watch for transfer fees (typically 3–5% of balance) and the standard APR after the promo period. Only use this strategy if you're disciplined enough to pay it off in time.</div></div>
+    </div>
+    <div class="related-section">
+      <h2>Related Calculators</h2>
+      <div class="related-grid">
+        <a href="/debt/student-loan"  class="related-card"><span class="related-card__icon">🎓</span> Student Loan</a>
+        <a href="/debt/personal-loan" class="related-card"><span class="related-card__icon">🏧</span> Personal Loan</a>
+        <a href="/debt/auto-loan"     class="related-card"><span class="related-card__icon">🚗</span> Auto Loan</a>
+        <a href="/specialized/latte-factor" class="related-card"><span class="related-card__icon">☕</span> Latte Factor</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

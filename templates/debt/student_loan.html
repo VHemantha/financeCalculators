@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block calculator_key %}studentLoan{% endblock %}
+{% block title %}Student Loan Refinance Calculator 2025 — Federal Rates 6.53%, 8.08%, 9.08%{% endblock %}
+{% block meta_description %}Calculate student loan refinance savings using 2025-26 federal rates: 6.53% undergrad, 8.08% grad, 9.08% PLUS. Monthly savings, lifetime interest reduction, and IDR comparison.{% endblock %}
+{% block canonical_path %}/debt/student-loan{% endblock %}
+{% block json_ld %}
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"WebApplication","name":"Student Loan Refinance Calculator","url":"{{ site_url }}/debt/student-loan","applicationCategory":"FinanceApplication","offers":{"@type":"Offer","price":"0"}},
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"What are the federal student loan rates for 2025-26?","acceptedAnswer":{"@type":"Answer","text":"For loans disbursed July 1, 2025 – June 30, 2026: Direct Subsidized/Unsubsidized for undergrads: 6.53%, Direct Unsubsidized for grad students: 8.08%, Direct PLUS loans for parents and grad students: 9.08%. These are fixed for the life of the loan."}},
+  {"@type":"Question","name":"Should I refinance my federal student loans?","acceptedAnswer":{"@type":"Answer","text":"Refinancing federal loans with a private lender can lower your rate but permanently forfeits federal benefits: income-driven repayment plans (IDR), Public Service Loan Forgiveness (PSLF), deferment/forbearance, and loan discharge options. Only refinance if you're confident you won't need these protections."}},
+  {"@type":"Question","name":"What credit score do I need to refinance student loans?","acceptedAnswer":{"@type":"Answer","text":"Most private lenders require a credit score of 650+, with the best rates (sub-5%) going to borrowers with 720+ scores. A steady income, low DTI, and graduation from an accredited institution also improve approval odds."}}
+]}]
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/#cat-debt">Debt</a></li><li aria-current="page">Student Loan Refinance</li></ol></nav>
+    <div class="page-header__inner">
+      <div class="page-header__icon">🎓</div>
+      <div>
+        <div class="page-header__category">Debt &amp; Loan Management</div>
+        <h1>Student Loan Refinance Calculator</h1>
+        <p class="page-header__desc">Compare your current federal loan rate to a refinanced rate. See monthly savings and lifetime interest reduction using 2025-26 federal rates.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="calc-page">
+  <div class="container">
+    <div class="calc-intro"><p>Use this student loan refinance calculator to see how much you could save by refinancing at a lower interest rate. Enter your current loan balance and rate, then compare against a potential new rate. The calculator shows your new monthly payment, monthly savings, and total lifetime interest savings. Important: refinancing federal loans with a private lender permanently eliminates access to income-driven repayment, Public Service Loan Forgiveness, and federal forbearance — weigh these benefits carefully before refinancing.</p></div>
+
+    <div class="calc-layout">
+      <div>
+        <div class="calc-panel">
+          <div class="panel-title">🎓 Loan Details</div>
+          <form id="studentLoan-form" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="sl-type">Loan Type</label>
+              <select class="form-select" id="sl-type" name="loan_type">
+                <option value="undergrad">Direct Subsidized/Unsubsidized — 6.53%</option>
+                <option value="grad">Direct Unsubsidized Grad — 8.08%</option>
+                <option value="parent_plus">Direct PLUS (Parent/Grad) — 9.08%</option>
+                <option value="custom">Custom Rate</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="sl-balance">Current Loan Balance</label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" class="form-input has-prefix" id="sl-balance" name="loan_balance" value="45000" min="1000" step="1000">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="sl-cur-rate">Current Interest Rate <span class="badge badge--green">2025</span></label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="sl-cur-rate" name="current_rate" value="6.53" min="1" max="20" step="0.01">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="sl-cur-term">Remaining Term</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="sl-cur-term" name="current_term_years" value="10" min="1" max="30" step="1">
+                <span class="input-suffix">years</span>
+              </div>
+            </div>
+            <hr class="form-divider">
+            <div class="form-group">
+              <label class="form-label" for="sl-new-rate">New Refinanced Rate</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="sl-new-rate" name="new_rate" value="5.5" min="1" max="20" step="0.1">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="sl-new-term">New Loan Term</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="sl-new-term" name="new_term_years" value="10" min="5" max="20" step="5">
+                <span class="input-suffix">years</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="sl-income">Annual Income</label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" class="form-input has-prefix" id="sl-income" name="income" value="60000" min="10000" step="5000">
+              </div>
+              <div class="form-hint">Used to estimate IDR payment alternative</div>
+            </div>
+            <button type="submit" class="btn btn--primary">Calculate Refinance Savings</button>
+          </form>
+        </div>
+      </div>
+      <div id="results-container">
+        <div class="empty-state"><div class="empty-state__icon">🎓</div><p>Enter your loan details to compare refinancing options and calculate your savings.</p></div>
+      </div>
+    </div>
+
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item"><button class="faq-question">What are the 2025 federal student loan rates? <span class="faq-icon">+</span></button><div class="faq-answer">For loans disbursed July 1, 2025 – June 30, 2026: Undergrad: 6.53%, Grad: 8.08%, PLUS: 9.08%. These are fixed for the life of the loan and set annually based on the 10-year Treasury yield plus a statutory add-on percentage.</div></div>
+      <div class="faq-item"><button class="faq-question">What do I lose by refinancing federal loans? <span class="faq-icon">+</span></button><div class="faq-answer">Refinancing federal loans with a private lender permanently eliminates: Income-Driven Repayment (IDR) plans, Public Service Loan Forgiveness (PSLF) eligibility, federal deferment and forbearance, and income-contingent repayment options. Only refinance if you have stable income and don't expect to need these safety nets.</div></div>
+      <div class="faq-item"><button class="faq-question">When should I refinance my student loans? <span class="faq-icon">+</span></button><div class="faq-answer">Consider refinancing if: you have a stable high income, you don't qualify for PSLF, you have good credit (720+), the new rate is at least 1% lower, and you're not planning to rely on IDR. Compare the total interest savings against the loss of federal protections.</div></div>
+    </div>
+    <div class="related-section">
+      <h2>Related Calculators</h2>
+      <div class="related-grid">
+        <a href="/debt/credit-card"   class="related-card"><span class="related-card__icon">💳</span> Credit Card Payoff</a>
+        <a href="/debt/personal-loan" class="related-card"><span class="related-card__icon">🏧</span> Personal Loan</a>
+        <a href="/tax/take-home-pay"  class="related-card"><span class="related-card__icon">💼</span> Take-Home Pay</a>
+        <a href="/tax/freelance"      class="related-card"><span class="related-card__icon">💻</span> Freelance Tax</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block calculator_key %}personalLoan{% endblock %}
+{% block title %}Personal Loan Eligibility Calculator 2025 — Credit Score to APR Estimate{% endblock %}
+{% block meta_description %}Estimate your personal loan APR and monthly payment based on your credit score (300-850). See approval likelihood and factors. US personal loan rates 2025. Free tool.{% endblock %}
+{% block canonical_path %}/debt/personal-loan{% endblock %}
+{% block json_ld %}
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"WebApplication","name":"Personal Loan Eligibility Calculator","url":"{{ site_url }}/debt/personal-loan","applicationCategory":"FinanceApplication","offers":{"@type":"Offer","price":"0"}},
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"What credit score do I need for a personal loan?","acceptedAnswer":{"@type":"Answer","text":"Most lenders require a minimum credit score of 580–640 for personal loan approval. Scores of 720+ qualify for the best rates (6–12% APR). Scores below 580 may still qualify but at much higher rates (25–36%) or may face denial. Income and DTI ratio also significantly affect approval."}},
+  {"@type":"Question","name":"What are typical personal loan interest rates in 2025?","acceptedAnswer":{"@type":"Answer","text":"Personal loan APRs in 2025 range from about 7–36%, depending on credit score, lender, loan amount, and term. Excellent credit (750+): 7–12%. Good credit (680–749): 12–21%. Fair credit (580–679): 21–36%. Always compare at least 3 lenders."}},
+  {"@type":"Question","name":"How does DTI ratio affect personal loan approval?","acceptedAnswer":{"@type":"Answer","text":"DTI (Debt-to-Income ratio) is your total monthly debt payments divided by gross monthly income. Most lenders prefer a DTI below 36% for personal loan approval. A DTI above 50% significantly reduces approval odds regardless of credit score."}}
+]}]
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/#cat-debt">Debt</a></li><li aria-current="page">Personal Loan</li></ol></nav>
+    <div class="page-header__inner">
+      <div class="page-header__icon">🏧</div>
+      <div>
+        <div class="page-header__category">Debt &amp; Loan Management</div>
+        <h1>Personal Loan Eligibility Calculator</h1>
+        <p class="page-header__desc">Estimate your approval likelihood and APR range based on your credit score before you apply.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="calc-page">
+  <div class="container">
+    <div class="calc-intro"><p>This personal loan eligibility calculator estimates your approval likelihood and expected APR range based on your credit score, income, and debt-to-income ratio — the three primary factors lenders evaluate. Credit score maps to an industry-average APR range (based on 2025 lender data from LendingTree, NerdWallet, and Bankrate). While not a formal pre-qualification, this tool helps you understand where you stand before submitting a hard inquiry that affects your credit score.</p></div>
+
+    <div class="calc-layout">
+      <div>
+        <div class="calc-panel">
+          <div class="panel-title">🏧 Loan &amp; Profile Details</div>
+          <form id="personalLoan-form" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="pl-amount">Loan Amount Needed</label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" class="form-input has-prefix" id="pl-amount" name="loan_amount" value="15000" min="1000" max="100000" step="1000">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="pl-income">Annual Income (Gross)</label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" class="form-input has-prefix" id="pl-income" name="annual_income" value="65000" min="5000" step="5000">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="pl-debts">Existing Monthly Debt Payments</label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" class="form-input has-prefix" id="pl-debts" name="monthly_debts" value="300" min="0" step="50">
+              </div>
+              <div class="form-hint">Car, student loan, minimum credit card payments</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="pl-score">
+                Credit Score
+                <span class="form-label-hint" id="pl-score-display">720 — Very Good</span>
+              </label>
+              <input type="range" class="form-range" id="pl-score" name="credit_score" value="720" min="300" max="850" step="10" data-output="pl-score-display" data-suffix="">
+              <div style="display:flex;justify-content:space-between;font-size:.7rem;color:var(--text-muted);margin-top:4px">
+                <span>300 Poor</span><span>580 Fair</span><span>670 Good</span><span>740 Very Good</span><span>800+ Exceptional</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="pl-term">Loan Term</label>
+              <select class="form-select" id="pl-term" name="term_years">
+                <option value="1">1 Year</option>
+                <option value="2">2 Years</option>
+                <option value="3" selected>3 Years</option>
+                <option value="5">5 Years</option>
+                <option value="7">7 Years</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn--primary">Check Eligibility</button>
+          </form>
+        </div>
+      </div>
+      <div id="results-container">
+        <div class="empty-state"><div class="empty-state__icon">🏧</div><p>Enter your details to estimate your personal loan eligibility and expected APR range.</p></div>
+      </div>
+    </div>
+
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item"><button class="faq-question">What credit score do I need for a personal loan? <span class="faq-icon">+</span></button><div class="faq-answer">Most lenders require 580+ for approval. 720+ gets the best rates (6–12% APR). 580–679 qualifies but at higher rates (21–36%). Below 580, options are limited to credit unions, secured loans, or peer-to-peer platforms. Credit score is the #1 factor after income verification.</div></div>
+      <div class="faq-item"><button class="faq-question">Does applying for a personal loan hurt my credit score? <span class="faq-icon">+</span></button><div class="faq-answer">Yes — a formal application triggers a hard inquiry, temporarily reducing your score by 5–10 points. However, most lenders offer soft-inquiry pre-qualification checks that don't affect your score. Rate shopping within a 14–45 day window counts as a single inquiry under FICO and VantageScore models.</div></div>
+      <div class="faq-item"><button class="faq-question">Personal loan vs credit card — which is better for debt consolidation? <span class="faq-icon">+</span></button><div class="faq-answer">Personal loans have lower fixed APRs (for good credit), fixed monthly payments, and a clear payoff date — ideal for consolidation. Credit cards have variable rates and no forced payoff timeline. For $5,000+ in high-APR credit card debt, consolidating to a personal loan at a lower fixed rate almost always saves money.</div></div>
+    </div>
+    <div class="related-section">
+      <h2>Related Calculators</h2>
+      <div class="related-grid">
+        <a href="/debt/credit-card"    class="related-card"><span class="related-card__icon">💳</span> Credit Card Payoff</a>
+        <a href="/debt/student-loan"   class="related-card"><span class="related-card__icon">🎓</span> Student Loan</a>
+        <a href="/mortgage/affordability" class="related-card"><span class="related-card__icon">🏡</span> Home Affordability</a>
+        <a href="/tax/take-home-pay"   class="related-card"><span class="related-card__icon">💼</span> Take-Home Pay</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block calculator_key %}affordability{% endblock %}
+{% block title %}Home Affordability Calculator 2025 — How Much House Can You Afford?{% endblock %}
+{% block meta_description %}Calculate the maximum home price you can afford using the 28%/36% DTI rule. Based on your income, down payment, and existing debt. Free 2025 US mortgage affordability tool.{% endblock %}
+{% block canonical_path %}/mortgage/affordability{% endblock %}
+{% block json_ld %}
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"WebApplication","name":"Home Affordability Calculator","url":"{{ site_url }}/mortgage/affordability","applicationCategory":"FinanceApplication","offers":{"@type":"Offer","price":"0"}},
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"What is the 28/36 rule for mortgages?","acceptedAnswer":{"@type":"Answer","text":"The 28/36 rule states your monthly mortgage payment (PITI) should not exceed 28% of gross monthly income, and total monthly debt payments should not exceed 36%. Lenders use this debt-to-income ratio to determine loan eligibility."}},
+  {"@type":"Question","name":"How much house can I afford on a $100,000 salary?","acceptedAnswer":{"@type":"Answer","text":"On a $100,000 salary with a 20% down payment, 6.7% mortgage rate, and no other debt, you can typically afford a home priced between $350,000–$420,000 using the 28% front-end DTI rule."}},
+  {"@type":"Question","name":"What is DTI ratio and why does it matter for mortgages?","acceptedAnswer":{"@type":"Answer","text":"DTI (Debt-to-Income) ratio is your total monthly debt payments divided by gross monthly income. Lenders prefer a front-end DTI (housing costs only) below 28% and a back-end DTI (all debts) below 36–43% for conventional mortgage approval."}}
+]}]
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/#cat-mortgage">Mortgage</a></li><li aria-current="page">Home Affordability</li></ol></nav>
+    <div class="page-header__inner">
+      <div class="page-header__icon">🏡</div>
+      <div>
+        <div class="page-header__category">Mortgage &amp; Real Estate</div>
+        <h1>Home Affordability Calculator</h1>
+        <p class="page-header__desc">Find the maximum home price you can afford using the industry-standard 28%/36% debt-to-income (DTI) rule.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="calc-page">
+  <div class="container">
+    <div class="calc-intro"><p>This home affordability calculator applies the 28/36 rule used by US mortgage lenders to determine how much home you can afford. The front-end ratio limits your monthly PITI (principal, interest, taxes, insurance) to 28% of gross income. The back-end ratio limits all debt payments — including car loans, credit cards, and student loans — to 36% of gross income. The calculator takes the more conservative of the two limits to give you a realistic home price ceiling and your current DTI status.</p></div>
+
+    <div class="calc-layout">
+      <div>
+        <div class="calc-panel">
+          <div class="panel-title">💼 Your Finances</div>
+          <form id="affordability-form" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="aff-income">Gross Annual Income</label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" class="form-input has-prefix" id="aff-income" name="gross_annual_income" value="100000" min="10000" step="5000">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="aff-debts">Monthly Debt Payments</label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" class="form-input has-prefix" id="aff-debts" name="monthly_debts" value="500" min="0" step="50">
+              </div>
+              <div class="form-hint">Car loans, student loans, credit cards, etc.</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="aff-down">Down Payment Saved</label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" class="form-input has-prefix" id="aff-down" name="down_payment" value="60000" min="0" step="5000">
+              </div>
+            </div>
+            <hr class="form-divider">
+            <div class="form-group">
+              <label class="form-label" for="aff-rate">Mortgage Interest Rate</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="aff-rate" name="annual_rate" value="6.7" min="1" max="20" step="0.1">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="aff-term">Loan Term</label>
+              <select class="form-select" id="aff-term" name="term_years">
+                <option value="30" selected>30 Years</option>
+                <option value="20">20 Years</option>
+                <option value="15">15 Years</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="aff-ptax">Property Tax Rate</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="aff-ptax" name="property_tax_rate" value="1.2" min="0" max="5" step="0.1">
+                <span class="input-suffix">%/yr</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="aff-ins">Monthly Insurance Estimate</label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" class="form-input has-prefix" id="aff-ins" name="insurance_monthly" value="150" min="0" step="25">
+              </div>
+            </div>
+            <button type="submit" class="btn btn--primary">Calculate Affordability</button>
+          </form>
+        </div>
+      </div>
+      <div id="results-container">
+        <div class="empty-state"><div class="empty-state__icon">🏡</div><p>Enter your income and financial details to see your maximum affordable home price.</p></div>
+      </div>
+    </div>
+
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item"><button class="faq-question">What is the 28/36 rule for mortgages? <span class="faq-icon">+</span></button><div class="faq-answer">The 28/36 rule is a guideline used by lenders. Your housing costs (PITI) should not exceed 28% of gross monthly income (front-end ratio), and all monthly debt payments combined should not exceed 36% (back-end ratio). This helps ensure you can afford your home without financial strain.</div></div>
+      <div class="faq-item"><button class="faq-question">What's included in PITI? <span class="faq-icon">+</span></button><div class="faq-answer">PITI stands for Principal (loan repayment), Interest, Property Taxes, and Insurance (homeowner's insurance and, if applicable, PMI). This is your total monthly housing cost used in the front-end DTI calculation.</div></div>
+      <div class="faq-item"><button class="faq-question">Can I get a mortgage with a high DTI? <span class="faq-icon">+</span></button><div class="faq-answer">FHA loans allow back-end DTI up to 50% with compensating factors (like large cash reserves or excellent credit). VA loans are also more flexible. Conventional loans through Fannie Mae/Freddie Mac typically cap at 45% DTI with automated underwriting, 36% for manual underwriting.</div></div>
+    </div>
+    <div class="related-section">
+      <h2>Related Calculators</h2>
+      <div class="related-grid">
+        <a href="/mortgage/repayment"   class="related-card"><span class="related-card__icon">💳</span> Mortgage Repayment</a>
+        <a href="/mortgage/rent-vs-buy" class="related-card"><span class="related-card__icon">⚖️</span> Rent vs Buy</a>
+        <a href="/tax/take-home-pay"    class="related-card"><span class="related-card__icon">💼</span> Take-Home Pay</a>
+        <a href="/debt/personal-loan"   class="related-card"><span class="related-card__icon">🏧</span> Personal Loan Eligibility</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

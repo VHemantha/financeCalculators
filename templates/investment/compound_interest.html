@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block calculator_key %}compoundInterest{% endblock %}
+{% block title %}Compound Interest Calculator 2025 — Investment Growth with Monthly Contributions{% endblock %}
+{% block meta_description %}Calculate compound interest with monthly additions. See how investments grow daily, monthly, or annually compounded. S&amp;P 500, Nifty 50, and custom presets. Free 2025 tool.{% endblock %}
+{% block canonical_path %}/investment/compound-interest{% endblock %}
+{% block json_ld %}
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"WebApplication","name":"Compound Interest Calculator","url":"{{ site_url }}/investment/compound-interest","applicationCategory":"FinanceApplication","offers":{"@type":"Offer","price":"0"}},
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"What is compound interest?","acceptedAnswer":{"@type":"Answer","text":"Compound interest means earning interest on your interest. Instead of just earning a return on your original principal, you earn returns on the accumulated balance including past returns. Einstein allegedly called it the eighth wonder of the world."}},
+  {"@type":"Question","name":"How much does $10,000 grow in 30 years at 7%?","acceptedAnswer":{"@type":"Answer","text":"At 7% annual return, $10,000 grows to approximately $76,123 in 30 years without additional contributions. With $500/month added, the total grows to approximately $625,000 — showing the power of regular contributions."}},
+  {"@type":"Question","name":"What is the difference between compound and simple interest?","acceptedAnswer":{"@type":"Answer","text":"Simple interest is calculated only on the principal. Compound interest is calculated on the principal plus accumulated interest. Over long periods, compound interest dramatically outperforms simple interest — a key reason to start investing early."}}
+]}]
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/#cat-investment">Investment</a></li><li aria-current="page">Compound Interest</li></ol></nav>
+    <div class="page-header__inner">
+      <div class="page-header__icon">💰</div>
+      <div>
+        <div class="page-header__category">Investment &amp; Retirement</div>
+        <h1>Compound Interest Calculator</h1>
+        <p class="page-header__desc">See the power of compounding with monthly contributions, multiple compounding frequencies, and regional investment return presets.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="calc-page">
+  <div class="container">
+    <div class="calc-intro"><p>This compound interest calculator shows how your money grows over time when returns are reinvested. Enter your starting principal, choose how much to add each month, select your expected annual return rate, and pick your compounding frequency. Return presets include the S&amp;P 500 historical average (10%), Nifty 50 (12%), EU stock market (7%), and bonds (4%). The calculator shows year-by-year growth, separating your contributions from the interest earned — so you can clearly see how much the market added on top of what you invested.</p></div>
+
+    <div class="calc-layout">
+      <div>
+        <div class="calc-panel">
+          <div class="panel-title">📈 Investment Parameters</div>
+          <form id="compoundInterest-form" novalidate>
+            <!-- Return presets -->
+            <div class="form-group">
+              <label class="form-label">Return Preset</label>
+              <div class="tab-group" id="ci-presets">
+                <button type="button" class="tab" data-rate="10" data-label="S&P 500">S&P 500</button>
+                <button type="button" class="tab" data-rate="12" data-label="Nifty 50">Nifty 50</button>
+                <button type="button" class="tab" data-rate="7" data-label="EU Stocks">EU</button>
+                <button type="button" class="tab" data-rate="4" data-label="Bonds">Bonds</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="ci-principal">Initial Investment</label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" class="form-input has-prefix" id="ci-principal" name="principal" value="10000" min="0" step="1000">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="ci-monthly">Monthly Contribution</label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" class="form-input has-prefix" id="ci-monthly" name="monthly_addition" value="500" min="0" step="50">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="ci-rate">Annual Return Rate</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="ci-rate" name="annual_rate" value="10" min="0.1" max="50" step="0.5">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="ci-freq">Compounding Frequency</label>
+              <select class="form-select" id="ci-freq" name="compound_freq">
+                <option value="daily">Daily (365×/yr)</option>
+                <option value="monthly" selected>Monthly (12×/yr)</option>
+                <option value="quarterly">Quarterly (4×/yr)</option>
+                <option value="semi">Semi-Annual (2×/yr)</option>
+                <option value="annually">Annually (1×/yr)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="ci-years">
+                Investment Period
+                <span class="form-label-hint" id="ci-years-display">20 years</span>
+              </label>
+              <input type="range" class="form-range" id="ci-years" name="years" value="20" min="1" max="50" step="1" data-output="ci-years-display" data-suffix=" years">
+            </div>
+
+            <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:var(--r-sm);padding:var(--s3) var(--s4);margin-top:var(--s4)">
+              <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin-bottom:var(--s2)">Live Preview</div>
+              <div style="display:flex;justify-content:space-between">
+                <span style="font-size:.8rem;color:var(--text-secondary)">Final Balance</span>
+                <span style="font-family:var(--font-heading);font-size:1.3rem;font-weight:700;color:var(--green-400)" id="preview-monthly">—</span>
+              </div>
+            </div>
+            <button type="submit" class="btn btn--primary">Calculate Growth</button>
+          </form>
+        </div>
+      </div>
+      <div id="results-container">
+        <div class="empty-state"><div class="empty-state__icon">📈</div><p>Set your investment parameters and watch your money grow over time.</p></div>
+      </div>
+    </div>
+
+    <div class="how-it-works">
+      <h2>How Compound Interest Works</h2>
+      <p>The compound interest formula for a lump sum is:</p>
+      <div class="formula-box">A = P × (1 + r/n)^(n×t)</div>
+      <p>Where <strong>P</strong> = principal, <strong>r</strong> = annual rate, <strong>n</strong> = compounding periods/year, <strong>t</strong> = years. With monthly contributions (PMT), the formula becomes:</p>
+      <div class="formula-box">A = P(1 + r/n)^(nt) + PMT × [((1+r/n)^(nt) − 1) / (r/n)]</div>
+    </div>
+
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item"><button class="faq-question">What return rate should I use? <span class="faq-icon">+</span></button><div class="faq-answer">Historical averages: S&P 500 ~10%/year (before inflation), total stock market ~9.5%, international stocks ~7%, bonds ~4–5%. India's Nifty 50 has averaged ~12–14% over the past 15 years. For conservative planning, use 6–7% to account for fees, taxes, and inflation.</div></div>
+      <div class="faq-item"><button class="faq-question">Does compounding frequency matter a lot? <span class="faq-icon">+</span></button><div class="faq-answer">The difference between monthly and daily compounding is small — on $100,000 at 10% over 30 years, daily compounding adds only ~$3,000 more than monthly. The frequency matters much less than the rate and time horizon. Focus on maximizing contributions and return rate.</div></div>
+      <div class="faq-item"><button class="faq-question">How do I account for inflation in the results? <span class="faq-icon">+</span></button><div class="faq-answer">Subtract expected inflation (historically ~2.5–3%/year) from your return rate to get the "real return." For example, 10% nominal return − 3% inflation = 7% real return. This gives you the purchasing power in today's dollars.</div></div>
+    </div>
+    <div class="related-section">
+      <h2>Related Calculators</h2>
+      <div class="related-grid">
+        <a href="/investment/401k-pension" class="related-card"><span class="related-card__icon">🏦</span> 401(k) Planner</a>
+        <a href="/investment/sip"          class="related-card"><span class="related-card__icon">📊</span> SIP Calculator</a>
+        <a href="/investment/fire"         class="related-card"><span class="related-card__icon">🔥</span> FIRE Calculator</a>
+        <a href="/specialized/rule-of-72"  class="related-card"><span class="related-card__icon">✖️</span> Rule of 72</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

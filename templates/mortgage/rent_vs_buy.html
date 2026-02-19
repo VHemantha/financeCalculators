@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block calculator_key %}rentVsBuy{% endblock %}
+{% block title %}Rent vs Buy Calculator 2025 — Should You Rent or Buy a Home?{% endblock %}
+{% block meta_description %}Compare the true cost of renting vs buying a home over 1–30 years. Factors in mortgage payments, appreciation, taxes, maintenance, and investment opportunity cost. Free 2025 tool.{% endblock %}
+{% block canonical_path %}/mortgage/rent-vs-buy{% endblock %}
+
+{% block json_ld %}
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"WebApplication","name":"Rent vs Buy Calculator","url":"{{ site_url }}/mortgage/rent-vs-buy","applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0"}},
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"Is it cheaper to rent or buy a home?","acceptedAnswer":{"@type":"Answer","text":"It depends on how long you plan to stay. Buying typically becomes cheaper after the break-even point (often 5–10 years), when equity built and appreciation outweigh upfront costs and interest paid. Our calculator computes this break-even year precisely."}},
+  {"@type":"Question","name":"What is the 5-year rule for buying a house?","acceptedAnswer":{"@type":"Answer","text":"The 5-year rule suggests you should plan to stay in a home for at least 5 years before buying. This ensures appreciation and equity gains outweigh transaction costs like closing fees, real estate commissions, and early mortgage interest."}},
+  {"@type":"Question","name":"How does opportunity cost factor into rent vs buy?","acceptedAnswer":{"@type":"Answer","text":"If you rent, your down payment stays invested in the stock market. Our calculator computes how much that investment would grow (at your chosen return rate) and compares it to the equity you'd build by owning the home."}}
+]}]
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/#cat-mortgage">Mortgage</a></li><li aria-current="page">Rent vs Buy</li></ol></nav>
+    <div class="page-header__inner">
+      <div class="page-header__icon">⚖️</div>
+      <div>
+        <div class="page-header__category">Mortgage &amp; Real Estate</div>
+        <h1>Rent vs Buy Calculator</h1>
+        <p class="page-header__desc">Compare the true financial outcome of renting vs buying over your chosen time horizon.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="calc-page">
+  <div class="container">
+    <div class="calc-intro">
+      <p>This rent vs buy calculator computes the net worth of both paths — renting and investing the difference vs buying a home and building equity. It accounts for mortgage interest, property taxes, maintenance, homeowner's insurance, annual rent increases, home price appreciation, and the opportunity cost of your down payment. Enter your details to find the break-even year — the point at which buying becomes financially superior to renting.</p>
+    </div>
+
+    <div class="calc-layout">
+      <div>
+        <div class="calc-panel">
+          <div class="panel-title">🏠 Home &amp; Mortgage Details</div>
+          <form id="rentVsBuy-form" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="rvb-home-price">Home Purchase Price</label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" class="form-input has-prefix" id="rvb-home-price" name="home_price" value="500000" min="50000" step="10000">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="rvb-down">Down Payment %</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="rvb-down" name="down_payment_pct" value="20" min="3" max="100" step="1">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="rvb-rate">Mortgage Rate</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="rvb-rate" name="mortgage_rate" value="6.7" min="1" max="20" step="0.1">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="rvb-home-growth">Annual Home Appreciation</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="rvb-home-growth" name="annual_home_growth" value="4" min="0" max="15" step="0.5">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <hr class="form-divider">
+            <div class="panel-title" style="border:none;padding:0;margin-bottom:var(--s4)">🏘️ Renting Details</div>
+            <div class="form-group">
+              <label class="form-label" for="rvb-rent">Current Monthly Rent</label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" class="form-input has-prefix" id="rvb-rent" name="monthly_rent" value="2500" min="100" step="100">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="rvb-rent-inc">Annual Rent Increase</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="rvb-rent-inc" name="annual_rent_increase" value="3" min="0" max="15" step="0.5">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="rvb-invest">Investment Return (if renting)</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="rvb-invest" name="investment_return" value="7" min="0" max="20" step="0.5">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <hr class="form-divider">
+            <div class="form-group">
+              <label class="form-label" for="rvb-years">
+                Time Horizon
+                <span class="form-label-hint" id="rvb-years-display">10 years</span>
+              </label>
+              <input type="range" class="form-range" id="rvb-years" name="years" value="10" min="1" max="30" step="1" data-output="rvb-years-display" data-suffix=" years">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="rvb-ptax">Property Tax Rate</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="rvb-ptax" name="property_tax_rate" value="1.2" min="0" max="5" step="0.1">
+                <span class="input-suffix">%/yr</span>
+              </div>
+            </div>
+            <button type="submit" class="btn btn--primary">Compare Rent vs Buy</button>
+          </form>
+        </div>
+      </div>
+      <div id="results-container">
+        <div class="empty-state"><div class="empty-state__icon">⚖️</div><p>Fill in your details and compare the financial outcomes of renting vs buying.</p></div>
+      </div>
+    </div>
+
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item"><button class="faq-question">Is it cheaper to rent or buy a home? <span class="faq-icon">+</span></button><div class="faq-answer">It depends on how long you plan to stay, local rent vs home prices, and your investment alternatives. Buying typically wins after 5–10 years due to equity accumulation and appreciation. Short-term, renting is usually cheaper once you factor in closing costs, property taxes, and maintenance.</div></div>
+      <div class="faq-item"><button class="faq-question">What costs should I include when buying? <span class="faq-icon">+</span></button><div class="faq-answer">Beyond the mortgage payment, homeowners pay property taxes (1–2% of value/year), homeowner's insurance (~$1,200–$2,400/yr), maintenance (1% of value/year), HOA fees if applicable, and closing costs (2–5% of purchase price).</div></div>
+      <div class="faq-item"><button class="faq-question">What is the break-even point? <span class="faq-icon">+</span></button><div class="faq-answer">The break-even year is when your net worth from buying (equity + appreciation) equals your net worth from renting (invested down payment + invested monthly savings). Before this point, renting may be financially superior; after it, buying is.</div></div>
+    </div>
+
+    <div class="related-section">
+      <h2>Related Calculators</h2>
+      <div class="related-grid">
+        <a href="/mortgage/repayment"     class="related-card"><span class="related-card__icon">💳</span> Mortgage Repayment</a>
+        <a href="/mortgage/affordability" class="related-card"><span class="related-card__icon">🏡</span> Home Affordability</a>
+        <a href="/investment/compound-interest" class="related-card"><span class="related-card__icon">💰</span> Compound Interest</a>
+        <a href="/investment/fire"        class="related-card"><span class="related-card__icon">🔥</span> FIRE Calculator</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

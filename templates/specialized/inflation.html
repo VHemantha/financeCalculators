@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block calculator_key %}inflation{% endblock %}
+{% block title %}Inflation Calculator 2025 — US CPI from 1913, EU &amp; India Purchasing Power{% endblock %}
+{% block meta_description %}Calculate the real value of money over time. US CPI data from 1913, EU HICP from 2000, India CPI from 2000. See how inflation erodes purchasing power. Free 2025 tool.{% endblock %}
+{% block canonical_path %}/specialized/inflation{% endblock %}
+{% block json_ld %}
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"WebApplication","name":"Inflation Calculator","url":"{{ site_url }}/specialized/inflation","applicationCategory":"FinanceApplication","offers":{"@type":"Offer","price":"0"}},
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"How much is $100 from 1913 worth today?","acceptedAnswer":{"@type":"Answer","text":"$100 in 1913 is worth approximately $3,100–$3,200 in 2024 dollars, based on US CPI data from the Bureau of Labor Statistics. This represents a cumulative inflation rate of over 3,000%, or an average annual rate of approximately 3.2% over 111 years."}},
+  {"@type":"Question","name":"What is the US inflation rate in 2024-2025?","acceptedAnswer":{"@type":"Answer","text":"US CPI inflation was approximately 2.9% for 2024 and trending toward 2.3–2.7% in early 2025, moving toward the Federal Reserve's 2% target after peaking at 9.1% in June 2022."}},
+  {"@type":"Question","name":"How does inflation affect investments?","acceptedAnswer":{"@type":"Answer","text":"Inflation erodes purchasing power. If your savings earn 3% interest but inflation is 4%, your real return is -1%. To build real wealth, your investment return must exceed inflation. The S&P 500 has historically returned ~7% after inflation, while cash savings often fail to keep pace."}}
+]}]
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/#cat-tools">Tools</a></li><li aria-current="page">Inflation Calculator</li></ol></nav>
+    <div class="page-header__inner">
+      <div class="page-header__icon">📅</div>
+      <div>
+        <div class="page-header__category">Specialized Tools</div>
+        <h1>Inflation Calculator</h1>
+        <p class="page-header__desc">Calculate the purchasing power of money across time. US CPI data from 1913, EU HICP and India CPI from 2000.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="calc-page">
+  <div class="container">
+    <div class="calc-intro"><p>This inflation calculator uses official CPI (Consumer Price Index) data to show how the purchasing power of money changes over time. US data is sourced from the Bureau of Labor Statistics (BLS CPI-U series) and covers 1913–2024. EU data uses the Harmonised Index of Consumer Prices (HICP, 2015=100) from Eurostat. India data uses CPI General (2010=100). Enter any amount and year to see its equivalent value in any other year, plus the average annual inflation rate over that period.</p></div>
+
+    <div class="calc-layout">
+      <div>
+        <div class="calc-panel">
+          <div class="panel-title">📅 Inflation Lookup</div>
+          <form id="inflation-form" novalidate>
+            <div class="form-group">
+              <label class="form-label">Region</label>
+              <div class="tab-group" id="inf-region-tabs">
+                <button type="button" class="tab is-active" data-region="US">🇺🇸 US (1913+)</button>
+                <button type="button" class="tab" data-region="EU">🇪🇺 EU (2000+)</button>
+                <button type="button" class="tab" data-region="IN">🇮🇳 India (2000+)</button>
+              </div>
+              <input type="hidden" id="inf-region" name="region" value="US">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="inf-amount">Amount</label>
+              <div class="input-wrap"><span class="input-prefix" id="inf-currency">$</span>
+                <input type="number" class="form-input has-prefix" id="inf-amount" name="amount" value="100" min="1" step="1">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="inf-start">From Year</label>
+              <input type="number" class="form-input" id="inf-start" name="start_year" value="1990" min="1913" max="2024" step="1">
+              <div class="form-hint" id="inf-year-hint">US data: 1913 – 2024</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="inf-end">To Year</label>
+              <input type="number" class="form-input" id="inf-end" name="end_year" value="2024" min="1913" max="2024" step="1">
+            </div>
+            <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:var(--r-sm);padding:var(--s3) var(--s4);margin-top:var(--s4)">
+              <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin-bottom:var(--s2)">Live Preview</div>
+              <div style="display:flex;justify-content:space-between">
+                <span style="font-size:.8rem;color:var(--text-secondary)">Adjusted Value</span>
+                <span style="font-family:var(--font-heading);font-size:1.3rem;font-weight:700;color:var(--yellow-400)" id="preview-monthly">—</span>
+              </div>
+            </div>
+            <button type="submit" class="btn btn--primary">Calculate Inflation Impact</button>
+          </form>
+        </div>
+      </div>
+      <div id="results-container">
+        <div class="empty-state"><div class="empty-state__icon">📅</div><p>Enter an amount and years to see how inflation has changed its purchasing power.</p></div>
+      </div>
+    </div>
+
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item"><button class="faq-question">How is the CPI calculated? <span class="faq-icon">+</span></button><div class="faq-answer">The Consumer Price Index (CPI) tracks the price of a fixed basket of goods and services purchased by urban consumers — including housing, food, clothing, transportation, medical care, education, and recreation. The BLS surveys thousands of prices monthly across 75 urban areas. CPI-U (all urban consumers) is the most widely used measure.</div></div>
+      <div class="faq-item"><button class="faq-question">What causes inflation? <span class="faq-icon">+</span></button><div class="faq-answer">Demand-pull inflation: too much money chasing too few goods (often caused by economic stimulus, low rates, or supply shortages). Cost-push inflation: rising production costs (energy, wages, raw materials). Monetary inflation: rapid growth in money supply. The 2021-2023 inflation surge combined all three: post-COVID supply chain disruptions, massive fiscal stimulus, and energy price spikes.</div></div>
+      <div class="faq-item"><button class="faq-question">How can I protect against inflation? <span class="faq-icon">+</span></button><div class="faq-answer">Investments that historically beat inflation: stocks (S&P 500 ~7% real return), TIPS (Treasury Inflation-Protected Securities), real estate, commodities, and I-bonds (US government bonds with CPI-linked rates). Cash savings accounts and traditional bonds often fail to keep pace with inflation over the long run.</div></div>
+    </div>
+    <div class="related-section">
+      <h2>Related Calculators</h2>
+      <div class="related-grid">
+        <a href="/specialized/rule-of-72"       class="related-card"><span class="related-card__icon">✖️</span> Rule of 72</a>
+        <a href="/investment/compound-interest"  class="related-card"><span class="related-card__icon">💰</span> Compound Interest</a>
+        <a href="/investment/fire"               class="related-card"><span class="related-card__icon">🔥</span> FIRE Calculator</a>
+        <a href="/investment/401k-pension"       class="related-card"><span class="related-card__icon">🏦</span> 401(k) Planner</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

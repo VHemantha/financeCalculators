@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block calculator_key %}autoLoan{% endblock %}
+{% block title %}Auto Loan vs Car Lease Calculator 2025 — Buy or Lease?{% endblock %}
+{% block meta_description %}Compare buying vs leasing a car. Calculate monthly payment, total cost, and true cost of a car lease money factor. Make the right decision at the dealership. Free 2025 auto calculator.{% endblock %}
+{% block canonical_path %}/debt/auto-loan{% endblock %}
+{% block json_ld %}
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"WebApplication","name":"Auto Loan vs Car Lease Calculator","url":"{{ site_url }}/debt/auto-loan","applicationCategory":"FinanceApplication","offers":{"@type":"Offer","price":"0"}},
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"Is it better to buy or lease a car?","acceptedAnswer":{"@type":"Answer","text":"Leasing offers lower monthly payments and allows you to drive a new car every 2–3 years, but you build no equity. Buying costs more monthly but you own the vehicle outright after the loan — typically a better long-term financial decision, especially for high-mileage drivers."}},
+  {"@type":"Question","name":"How do I calculate a car lease payment?","acceptedAnswer":{"@type":"Answer","text":"Monthly lease payment = Depreciation fee + Finance charge. Depreciation = (Cap cost − Residual value) ÷ Term months. Finance charge = (Cap cost + Residual value) × Money factor. The residual value and money factor are set by the manufacturer's finance arm."}},
+  {"@type":"Question","name":"What is a car lease money factor?","acceptedAnswer":{"@type":"Answer","text":"The money factor is the lease equivalent of an interest rate. Multiply by 2,400 to convert to approximate APR. A money factor of 0.00125 = 3% APR. A good money factor in 2025 is below 0.002 (4.8% APR)."}}
+]}]
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/#cat-debt">Debt</a></li><li aria-current="page">Auto Loan / Car Lease</li></ol></nav>
+    <div class="page-header__inner">
+      <div class="page-header__icon">🚗</div>
+      <div>
+        <div class="page-header__category">Debt &amp; Loan Management</div>
+        <h1>Auto Loan / Car Lease Calculator</h1>
+        <p class="page-header__desc">Calculate your monthly car payment and compare the true cost of buying vs leasing a vehicle.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="calc-page">
+  <div class="container">
+    <div class="calc-intro"><p>Use this auto loan vs car lease calculator to make an informed decision at the dealership. For buying: enter your vehicle price, down payment, loan rate, and term to find your monthly payment and total cost. For leasing: enter the residual value percentage and money factor (available from the dealer) to calculate your true lease payment. The side-by-side comparison shows which option costs less over the same time period — though it also highlights the equity difference.</p></div>
+
+    <div class="calc-layout">
+      <div>
+        <div class="calc-panel">
+          <div class="panel-title">🚗 Vehicle &amp; Loan Details</div>
+          <form id="autoLoan-form" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="al-price">Vehicle Price (MSRP)</label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" class="form-input has-prefix" id="al-price" name="vehicle_price" value="35000" min="5000" step="500">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="al-down">Down Payment</label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" class="form-input has-prefix" id="al-down" name="down_payment" value="5000" min="0" step="500">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="al-trade">Trade-In Value</label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" class="form-input has-prefix" id="al-trade" name="trade_in_value" value="0" min="0" step="500">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="al-tax">Sales Tax Rate</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="al-tax" name="sales_tax_rate" value="8" min="0" max="15" step="0.5">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <hr class="form-divider">
+            <div class="panel-title" style="border:none;padding:0;margin-bottom:var(--s4)">🏦 Loan (Buy)</div>
+            <div class="form-group">
+              <label class="form-label" for="al-loan-rate">Loan APR</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="al-loan-rate" name="loan_rate" value="7.0" min="0" max="25" step="0.25">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="al-loan-term">Loan Term</label>
+              <select class="form-select" id="al-loan-term" name="loan_term_months">
+                <option value="24">24 months</option>
+                <option value="36">36 months</option>
+                <option value="48">48 months</option>
+                <option value="60" selected>60 months</option>
+                <option value="72">72 months</option>
+                <option value="84">84 months</option>
+              </select>
+            </div>
+            <hr class="form-divider">
+            <div class="panel-title" style="border:none;padding:0;margin-bottom:var(--s4)">📄 Lease</div>
+            <div class="form-group">
+              <label class="form-label" for="al-residual">Residual Value</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="al-residual" name="residual_value_pct" value="55" min="20" max="80" step="1">
+                <span class="input-suffix">% of MSRP</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="al-mf">Money Factor</label>
+              <input type="number" class="form-input" id="al-mf" name="money_factor" value="0.00125" min="0" max="0.01" step="0.00025">
+              <div class="form-hint">Money factor × 2400 = approx APR (0.00125 ≈ 3%)</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="al-lease-term">Lease Term</label>
+              <select class="form-select" id="al-lease-term" name="lease_term_months">
+                <option value="24">24 months</option>
+                <option value="36" selected>36 months</option>
+                <option value="48">48 months</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn--primary">Compare Buy vs Lease</button>
+          </form>
+        </div>
+      </div>
+      <div id="results-container">
+        <div class="empty-state"><div class="empty-state__icon">🚗</div><p>Enter vehicle and financing details to compare buying vs leasing costs.</p></div>
+      </div>
+    </div>
+
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item"><button class="faq-question">Is it better to buy or lease? <span class="faq-icon">+</span></button><div class="faq-answer">Buying wins long-term: lower total cost once the loan is paid, no mileage restrictions, equity built, lower insurance requirements. Leasing wins short-term: lower monthly payments, always driving new cars, tax deductions for business use. If you drive 12,000+ miles/year and keep cars 6+ years, buying is almost always cheaper.</div></div>
+      <div class="faq-item"><button class="faq-question">How do I convert a money factor to APR? <span class="faq-icon">+</span></button><div class="faq-answer">Multiply the money factor by 2,400 to get the approximate annual percentage rate. Money factor 0.00125 × 2,400 = 3% APR. Money factor 0.002 × 2,400 = 4.8% APR. Always ask the dealer for the money factor to calculate your true financing cost.</div></div>
+      <div class="faq-item"><button class="faq-question">What is a residual value in a car lease? <span class="faq-icon">+</span></button><div class="faq-answer">The residual value is the estimated worth of the vehicle at the end of the lease term, expressed as a percentage of MSRP. A higher residual means lower monthly payments because you're only financing the depreciation. Luxury/slow-deprecating vehicles often have 55–65% residuals; economy cars 40–50%.</div></div>
+    </div>
+    <div class="related-section">
+      <h2>Related Calculators</h2>
+      <div class="related-grid">
+        <a href="/debt/personal-loan" class="related-card"><span class="related-card__icon">🏧</span> Personal Loan</a>
+        <a href="/debt/credit-card"   class="related-card"><span class="related-card__icon">💳</span> Credit Card Payoff</a>
+        <a href="/mortgage/repayment" class="related-card"><span class="related-card__icon">🏠</span> Mortgage Repayment</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

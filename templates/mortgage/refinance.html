@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block calculator_key %}refinance{% endblock %}
+{% block title %}Mortgage Refinance Calculator — Monthly Savings & Break-Even 2025{% endblock %}
+{% block meta_description %}Should you refinance your mortgage? Calculate your monthly savings, break-even point, and lifetime interest reduction. Supports all regions. Updated 2025 rates.{% endblock %}
+{% block canonical_path %}/mortgage/refinance{% endblock %}
+{% block json_ld %}
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"WebApplication","name":"Mortgage Refinance Calculator","url":"{{ site_url }}/mortgage/refinance","applicationCategory":"FinanceApplication","offers":{"@type":"Offer","price":"0"}},
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"When should I refinance my mortgage?","acceptedAnswer":{"@type":"Answer","text":"Refinancing generally makes sense when you can lower your rate by at least 0.5–1%, you plan to stay in the home past the break-even point (closing costs ÷ monthly savings), and you have good credit (720+) to qualify for competitive rates."}},
+  {"@type":"Question","name":"What are typical mortgage refinance closing costs?","acceptedAnswer":{"@type":"Answer","text":"Refinance closing costs typically range from 2–5% of the loan amount, or roughly $3,000–$6,000 on a $300,000 loan. They include origination fees, appraisal, title insurance, and government recording fees."}},
+  {"@type":"Question","name":"How is break-even calculated for refinancing?","acceptedAnswer":{"@type":"Answer","text":"Break-even = Total closing costs ÷ Monthly payment savings. For example, if closing costs are $4,000 and you save $200/month, break-even is 20 months. If you stay in the home longer, refinancing saves money."}}
+]}]
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/#cat-mortgage">Mortgage</a></li><li aria-current="page">Refinance Calculator</li></ol></nav>
+    <div class="page-header__inner">
+      <div class="page-header__icon">🔄</div>
+      <div>
+        <div class="page-header__category">Mortgage &amp; Real Estate</div>
+        <h1>Mortgage Refinance Calculator</h1>
+        <p class="page-header__desc">Find your monthly savings, break-even point, and total interest reduction from refinancing.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="calc-page">
+  <div class="container">
+    <div class="calc-intro"><p>Use this mortgage refinance calculator to determine if refinancing makes financial sense. Enter your current loan details and the new loan terms you're considering. The calculator shows your new monthly payment, monthly savings, how many months it takes to recoup your closing costs (break-even), and how much total interest you'll save or pay over the life of the loan. A good rule of thumb: refinancing makes sense if you'll stay past the break-even point and your rate drops by at least 0.5–1%.</p></div>
+
+    <div class="calc-layout">
+      <div>
+        <div class="calc-panel">
+          <div class="panel-title">📋 Current Loan</div>
+          <form id="refinance-form" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="ref-balance">Remaining Loan Balance</label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" class="form-input has-prefix" id="ref-balance" name="current_balance" value="320000" min="1000" step="1000">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="ref-cur-rate">Current Interest Rate</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="ref-cur-rate" name="current_rate" value="7.5" min="0.5" max="20" step="0.1">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="ref-cur-term">Remaining Term</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="ref-cur-term" name="current_remaining_years" value="25" min="1" max="40" step="1">
+                <span class="input-suffix">years</span>
+              </div>
+            </div>
+            <hr class="form-divider">
+            <div class="panel-title" style="border:none;padding:0;margin-bottom:var(--s4)">✨ New Loan</div>
+            <div class="form-group">
+              <label class="form-label" for="ref-new-rate">New Interest Rate <span class="badge badge--green">2025</span></label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="ref-new-rate" name="new_rate" value="6.2" min="0.5" max="20" step="0.1">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="ref-new-term">New Loan Term</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="ref-new-term" name="new_term_years" value="30" min="5" max="40" step="5">
+                <span class="input-suffix">years</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="ref-closing">Closing Costs</label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" class="form-input has-prefix" id="ref-closing" name="closing_costs" value="4000" min="0" step="500">
+              </div>
+              <div class="form-hint">Typically 2–5% of loan balance ($3,000–$8,000)</div>
+            </div>
+            <button type="submit" class="btn btn--primary">Calculate Refinance Savings</button>
+          </form>
+        </div>
+      </div>
+      <div id="results-container">
+        <div class="empty-state"><div class="empty-state__icon">🔄</div><p>Enter your current and new loan details to see if refinancing makes financial sense.</p></div>
+      </div>
+    </div>
+
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item"><button class="faq-question">When should I refinance my mortgage? <span class="faq-icon">+</span></button><div class="faq-answer">Refinancing generally makes sense when: (1) you can lower your interest rate by at least 0.5–1%, (2) you plan to stay in the home long enough to recoup closing costs, and (3) you have good credit (720+) to qualify for the best rates. Use this calculator to find your break-even month.</div></div>
+      <div class="faq-item"><button class="faq-question">What are typical closing costs for refinancing? <span class="faq-icon">+</span></button><div class="faq-answer">Refinance closing costs range from 2–5% of the loan balance. On a $320,000 loan, expect $3,200–$16,000. Costs include origination fees (0.5–1%), appraisal ($300–$700), title insurance, and recording fees. Some lenders offer "no-closing-cost" refinances with slightly higher rates.</div></div>
+      <div class="faq-item"><button class="faq-question">Does refinancing reset my mortgage clock? <span class="faq-icon">+</span></button><div class="faq-answer">Yes, refinancing to a new 30-year mortgage restarts your amortization. This reduces your monthly payment but means you'll be in debt longer and may pay more total interest. Consider a 15 or 20-year refinance to keep your payoff timeline while lowering your rate.</div></div>
+    </div>
+    <div class="related-section">
+      <h2>Related Calculators</h2>
+      <div class="related-grid">
+        <a href="/mortgage/repayment"     class="related-card"><span class="related-card__icon">💳</span> Mortgage Repayment</a>
+        <a href="/mortgage/affordability" class="related-card"><span class="related-card__icon">🏡</span> Home Affordability</a>
+        <a href="/debt/personal-loan"     class="related-card"><span class="related-card__icon">🏧</span> Personal Loan</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block calculator_key %}pension401k{% endblock %}
+{% block title %}401(k) Calculator 2025 — Retirement Savings Projection with Employer Match{% endblock %}
+{% block meta_description %}Project your 401(k) retirement savings using 2025 IRS limits ($23,500). Factor in employer match, salary, return rate, and inflation. Calculate monthly retirement income. Free tool.{% endblock %}
+{% block canonical_path %}/investment/401k-pension{% endblock %}
+{% block json_ld %}
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"WebApplication","name":"401k Pension Planner","url":"{{ site_url }}/investment/401k-pension","applicationCategory":"FinanceApplication","offers":{"@type":"Offer","price":"0"}},
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"How much should I contribute to my 401(k)?","acceptedAnswer":{"@type":"Answer","text":"At minimum, contribute enough to get your full employer match — that's a 50–100% instant return on your money. Beyond that, aim to max out your contributions ($23,500 in 2025) if possible. A general rule: save 15% of pre-tax income for retirement."}},
+  {"@type":"Question","name":"What is the 401k contribution limit for 2025?","acceptedAnswer":{"@type":"Answer","text":"The 2025 IRS 401(k) employee contribution limit is $23,500 (up from $23,000 in 2024). With catch-up contributions for ages 50–59 and 64+, the limit is $31,000. For ages 60–63 (new SECURE 2.0 provision), the total is $34,750."}},
+  {"@type":"Question","name":"How is retirement income calculated from a 401k?","acceptedAnswer":{"@type":"Answer","text":"A common approach is the 4% rule — withdraw 4% of your portfolio annually in retirement. So a $1,000,000 portfolio supports $40,000/year ($3,333/month) in withdrawals with historically high probability of lasting 30+ years."}}
+]}]
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/#cat-investment">Investment</a></li><li aria-current="page">401(k) Planner</li></ol></nav>
+    <div class="page-header__inner">
+      <div class="page-header__icon">🏦</div>
+      <div>
+        <div class="page-header__category">Investment &amp; Retirement</div>
+        <h1>401(k) / Pension Planner</h1>
+        <p class="page-header__desc">Project your retirement nest egg using 2025 IRS contribution limits, employer match, and inflation-adjusted income estimates.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="calc-page">
+  <div class="container">
+    <div class="calc-intro"><p>Plan your retirement with the 2025 401(k) planner. Enter your current age, salary, contribution percentage, and employer match details to see how your retirement portfolio grows over time. The 2025 IRS employee contribution limit is $23,500 (catch-up: $7,500 for ages 50–59 and 64+; $11,250 for ages 60–63 per SECURE 2.0). The calculator projects your portfolio in both nominal and inflation-adjusted (real) dollars, then estimates your monthly retirement income using the 4% safe withdrawal rate.</p></div>
+
+    <div class="calc-layout">
+      <div>
+        <div class="calc-panel">
+          <div class="panel-title">🏦 Retirement Details</div>
+          <form id="pension401k-form" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="pk-cur-age">Current Age</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input" id="pk-cur-age" name="current_age" value="30" min="18" max="70" step="1">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="pk-ret-age">Retirement Age</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input" id="pk-ret-age" name="retirement_age" value="65" min="45" max="80" step="1">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="pk-balance">Current 401(k) Balance</label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" class="form-input has-prefix" id="pk-balance" name="current_balance" value="50000" min="0" step="1000">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="pk-salary">Annual Salary</label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" class="form-input has-prefix" id="pk-salary" name="annual_salary" value="80000" min="10000" step="5000">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="pk-contrib">Your Contribution Rate</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="pk-contrib" name="contribution_pct" value="10" min="1" max="50" step="0.5">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <hr class="form-divider">
+            <div class="form-group">
+              <label class="form-label" for="pk-emp-match">Employer Match Rate</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="pk-emp-match" name="employer_match_pct" value="50" min="0" max="100" step="25">
+                <span class="input-suffix">%</span>
+              </div>
+              <div class="form-hint">e.g. 50% means employer matches $0.50 per $1 you contribute</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="pk-emp-limit">Match Limit (% of salary)</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="pk-emp-limit" name="employer_match_limit" value="6" min="0" max="20" step="1">
+                <span class="input-suffix">%</span>
+              </div>
+              <div class="form-hint">Employer match applies up to this % of salary</div>
+            </div>
+            <hr class="form-divider">
+            <div class="form-group">
+              <label class="form-label" for="pk-return">Expected Annual Return</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="pk-return" name="expected_return" value="7" min="1" max="20" step="0.5">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="pk-inflation">Expected Inflation</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="pk-inflation" name="inflation_rate" value="2.5" min="0" max="10" step="0.5">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <button type="submit" class="btn btn--primary">Project Retirement Savings</button>
+          </form>
+        </div>
+      </div>
+      <div id="results-container">
+        <div class="empty-state"><div class="empty-state__icon">🏦</div><p>Enter your details to project your 401(k) balance at retirement and estimated monthly income.</p></div>
+      </div>
+    </div>
+
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item"><button class="faq-question">What is the 2025 401(k) contribution limit? <span class="faq-icon">+</span></button><div class="faq-answer">The 2025 IRS 401(k) employee contribution limit is $23,500. Catch-up contributions for ages 50–59 and 64+ add $7,500 (total: $31,000). A new SECURE 2.0 provision for ages 60–63 allows a higher catch-up of $11,250 (total: $34,750). The total employer + employee limit is $70,000.</div></div>
+      <div class="faq-item"><button class="faq-question">What does employer match mean? <span class="faq-icon">+</span></button><div class="faq-answer">A 50% match up to 6% of salary means: if your salary is $80,000 and you contribute 6% ($4,800), your employer adds 50% of that ($2,400) for a total of $7,200/year. This is a 50% instant return on your contributed money — always contribute at least enough to get the full match.</div></div>
+      <div class="faq-item"><button class="faq-question">How much do I need to retire comfortably? <span class="faq-icon">+</span></button><div class="faq-answer">The 4% rule suggests you need 25× your annual retirement expenses. If you want $60,000/year in retirement, you need ~$1,500,000. Financial planners recommend replacing 70–90% of your pre-retirement income, so start by estimating your retirement spending needs.</div></div>
+    </div>
+    <div class="related-section">
+      <h2>Related Calculators</h2>
+      <div class="related-grid">
+        <a href="/investment/compound-interest" class="related-card"><span class="related-card__icon">💰</span> Compound Interest</a>
+        <a href="/investment/fire"              class="related-card"><span class="related-card__icon">🔥</span> FIRE Calculator</a>
+        <a href="/tax/take-home-pay"            class="related-card"><span class="related-card__icon">💼</span> Take-Home Pay</a>
+        <a href="/investment/sip"               class="related-card"><span class="related-card__icon">📊</span> SIP Calculator</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block calculator_key %}sip{% endblock %}
+{% block title %}SIP Calculator 2025 — Mutual Fund Returns & Step-Up SIP India{% endblock %}
+{% block meta_description %}Calculate SIP returns for Nifty 50, large cap, mid cap mutual funds. Step-up SIP option. Nifty 50 preset 12% p.a. Compare lump sum vs SIP. Free India SIP calculator 2025.{% endblock %}
+{% block canonical_path %}/investment/sip{% endblock %}
+{% block json_ld %}
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"WebApplication","name":"SIP Calculator","url":"{{ site_url }}/investment/sip","applicationCategory":"FinanceApplication","offers":{"@type":"Offer","price":"0"}},
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"What is a Systematic Investment Plan (SIP)?","acceptedAnswer":{"@type":"Answer","text":"A SIP is a method of investing a fixed amount in a mutual fund at regular intervals (monthly, quarterly). It automates investing, benefits from rupee cost averaging, and harnesses the power of compounding. SIPs are the most popular investment vehicle in India."}},
+  {"@type":"Question","name":"What is a realistic SIP return rate for India?","acceptedAnswer":{"@type":"Answer","text":"Nifty 50 index funds have historically delivered 12–14% CAGR over 10+ years. Large-cap funds average 11–12%, mid-cap funds 13–15%, and small-cap funds 15–18% (with higher risk). For conservative planning, use 10–12%."}},
+  {"@type":"Question","name":"What is a Step-Up SIP?","acceptedAnswer":{"@type":"Answer","text":"A Step-Up SIP (or SIP Top-Up) automatically increases your SIP amount each year by a fixed percentage. For example, starting a ₹5,000/month SIP with 10% annual step-up means you invest ₹5,500 in year 2, ₹6,050 in year 3, and so on — significantly boosting your final corpus."}}
+]}]
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/#cat-investment">Investment</a></li><li aria-current="page">SIP Calculator</li></ol></nav>
+    <div class="page-header__inner">
+      <div class="page-header__icon">📊</div>
+      <div>
+        <div class="page-header__category">Investment &amp; Retirement</div>
+        <h1>SIP Calculator — Systematic Investment Plan</h1>
+        <p class="page-header__desc">Calculate mutual fund SIP returns for India with Nifty 50, large cap, mid cap, and small cap presets. Includes step-up SIP option.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="calc-page">
+  <div class="container">
+    <div class="calc-intro"><p>This SIP calculator computes your mutual fund investment returns using the standard SIP formula. Select from popular India presets — Nifty 50 index (12% p.a. historical CAGR), large-cap funds (11%), mid-cap funds (14%), or small-cap funds (16%). The step-up SIP option lets you model an annual increase in your monthly investment, which dramatically increases your final corpus. Results show your total invested amount, estimated returns, and final maturity value year by year.</p></div>
+
+    <div class="calc-layout">
+      <div>
+        <div class="calc-panel">
+          <div class="panel-title">📊 SIP Details</div>
+          <form id="sip-form" novalidate>
+            <div class="form-group">
+              <label class="form-label">Fund Category Preset</label>
+              <div class="tab-group" id="sip-presets">
+                <button type="button" class="tab" data-rate="12">Nifty 50</button>
+                <button type="button" class="tab" data-rate="11">Large Cap</button>
+                <button type="button" class="tab" data-rate="14">Mid Cap</button>
+                <button type="button" class="tab" data-rate="16">Small Cap</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="sip-amount">Monthly SIP Amount</label>
+              <div class="input-wrap"><span class="input-prefix">₹</span>
+                <input type="number" class="form-input has-prefix" id="sip-amount" name="monthly_investment" value="10000" min="500" step="500">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="sip-rate">Expected Annual Return</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="sip-rate" name="annual_return" value="12" min="1" max="30" step="0.5">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="sip-years">
+                Investment Period
+                <span class="form-label-hint" id="sip-years-display">15 years</span>
+              </label>
+              <input type="range" class="form-range" id="sip-years" name="years" value="15" min="1" max="40" step="1" data-output="sip-years-display" data-suffix=" years">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="sip-stepup">Annual Step-Up (SIP Top-Up)</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="sip-stepup" name="step_up_pct" value="0" min="0" max="30" step="1">
+                <span class="input-suffix">%/yr</span>
+              </div>
+              <div class="form-hint">Increase monthly SIP by this % each year (0 = fixed SIP)</div>
+            </div>
+
+            <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:var(--r-sm);padding:var(--s3) var(--s4);margin-top:var(--s4)">
+              <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin-bottom:var(--s2)">Live Preview</div>
+              <div style="display:flex;justify-content:space-between">
+                <span style="font-size:.8rem;color:var(--text-secondary)">Maturity Value</span>
+                <span style="font-family:var(--font-heading);font-size:1.3rem;font-weight:700;color:var(--green-400)" id="preview-monthly">—</span>
+              </div>
+            </div>
+            <button type="submit" class="btn btn--primary">Calculate SIP Returns</button>
+          </form>
+        </div>
+      </div>
+      <div id="results-container">
+        <div class="empty-state"><div class="empty-state__icon">📊</div><p>Enter your SIP amount and click Calculate to see how your investments grow.</p></div>
+      </div>
+    </div>
+
+    <div class="how-it-works">
+      <h2>How SIP Returns Are Calculated</h2>
+      <div class="formula-box">FV = P × [((1 + r)^n − 1) / r] × (1 + r)</div>
+      <p>Where <strong>P</strong> = monthly SIP amount, <strong>r</strong> = monthly rate (annual rate ÷ 12 ÷ 100), <strong>n</strong> = total months. This is the future value of a series of equal payments (annuity-due). The extra (1+r) factor accounts for each payment being made at the start of the period.</p>
+    </div>
+
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item"><button class="faq-question">What is the Nifty 50 historical return? <span class="faq-icon">+</span></button><div class="faq-answer">The Nifty 50 has delivered approximately 12–14% CAGR over the past 10–15 years (as of 2025). However, this includes significant volatility — the index has seen drops of 30–55% in 2008 and 2020. SIP investing smooths this volatility through rupee cost averaging.</div></div>
+      <div class="faq-item"><button class="faq-question">What is a good SIP amount to start with? <span class="faq-icon">+</span></button><div class="faq-answer">You can start a SIP with as little as ₹500/month in many mutual funds. A common guideline is to invest at least 20% of your monthly take-home pay. As income grows, use a step-up SIP to increase contributions annually — even a 10% annual step-up dramatically increases long-term wealth.</div></div>
+      <div class="faq-item"><button class="faq-question">SIP vs Lump Sum — which is better? <span class="faq-icon">+</span></button><div class="faq-answer">SIP is better for regular investors as it removes market timing risk via rupee cost averaging. Lump sum can outperform SIP in consistently rising markets. For most retail investors with regular income, SIP is the recommended approach. Our calculator shows SIP outcomes; use the compound interest calculator for lump sum comparisons.</div></div>
+    </div>
+    <div class="related-section">
+      <h2>Related Calculators</h2>
+      <div class="related-grid">
+        <a href="/investment/compound-interest" class="related-card"><span class="related-card__icon">💰</span> Compound Interest</a>
+        <a href="/investment/fire"              class="related-card"><span class="related-card__icon">🔥</span> FIRE Calculator</a>
+        <a href="/tax/capital-gains"            class="related-card"><span class="related-card__icon">📉</span> Capital Gains Tax</a>
+        <a href="/specialized/inflation"        class="related-card"><span class="related-card__icon">📅</span> Inflation Calculator</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow">
+
+  <!-- Primary SEO -->
+  <title>{% block title %}Free Financial Calculators — Mortgage, Investment, Tax | FinWise{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}Free financial calculators for mortgage payments, compound interest, retirement planning, taxes, and debt management. Covering US, EU, UK, India &amp; Asia.{% endblock %}">
+  <link rel="canonical" href="{{ site_url }}{% block canonical_path %}/{% endblock %}">
+
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website">
+  <meta property="og:site_name"   content="{{ site_name }}">
+  <meta property="og:title"       content="{% block og_title %}{% block _og_title_inner %}{{ self.title() }}{% endblock %}{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}{{ self.meta_description() }}{% endblock %}">
+  <meta property="og:url"         content="{{ site_url }}{% block og_url_path %}{% block _og_url_inner %}/{% endblock %}{% endblock %}">
+  <meta property="og:image"       content="{{ site_url }}/static/img/og-default.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content="{{ self.og_title() }}">
+  <meta name="twitter:description" content="{{ self.og_description() }}">
+  <meta name="twitter:image"       content="{{ site_url }}/static/img/og-default.png">
+
+  <!-- JSON-LD Structured Data -->
+  {% block json_ld %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "{{ site_name }}",
+    "url": "{{ site_url }}",
+    "description": "Free financial calculators for mortgage, investment, tax, and debt management across US, EU, UK, India and Asia.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "{{ site_url }}/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+  {% endblock %}
+
+  <!-- Preconnect for Google Fonts (performance) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Main stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+  <!-- Favicon (SVG data URI) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%2316A34A'/><text x='16' y='22' font-size='18' text-anchor='middle' fill='white'>₣</text></svg>">
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body data-calculator="{% block calculator_key %}{% endblock %}">
+
+<!-- ═══ Navigation ═══════════════════════════════════════════════════════════ -->
+<nav class="nav" aria-label="Main navigation">
+  <div class="container">
+    <div class="nav__inner">
+      <!-- Logo -->
+      <a href="/" class="nav__logo" aria-label="{{ site_name }} home">
+        <div class="nav__logo-icon">₣</div>
+        Fin<span class="accent">Wise</span>
+      </a>
+
+      <!-- Desktop links -->
+      <div class="nav__links" role="list">
+        <div class="nav__dropdown" role="listitem">
+          <button class="nav__dropdown-toggle" aria-haspopup="true">
+            Mortgage
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="nav__dropdown-menu" role="menu">
+            <a href="/mortgage/repayment"    class="nav__dropdown-item" role="menuitem">Mortgage Repayment</a>
+            <a href="/mortgage/rent-vs-buy"  class="nav__dropdown-item" role="menuitem">Rent vs Buy</a>
+            <a href="/mortgage/refinance"    class="nav__dropdown-item" role="menuitem">Refinance Calculator</a>
+            <a href="/mortgage/affordability"class="nav__dropdown-item" role="menuitem">Home Affordability</a>
+          </div>
+        </div>
+        <div class="nav__dropdown" role="listitem">
+          <button class="nav__dropdown-toggle">
+            Investment
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="nav__dropdown-menu">
+            <a href="/investment/compound-interest" class="nav__dropdown-item">Compound Interest</a>
+            <a href="/investment/401k-pension"       class="nav__dropdown-item">401(k) / Pension</a>
+            <a href="/investment/sip"                class="nav__dropdown-item">SIP Calculator</a>
+            <a href="/investment/fire"               class="nav__dropdown-item">FIRE Calculator</a>
+          </div>
+        </div>
+        <div class="nav__dropdown" role="listitem">
+          <button class="nav__dropdown-toggle">
+            Debt
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="nav__dropdown-menu">
+            <a href="/debt/student-loan"   class="nav__dropdown-item">Student Loan</a>
+            <a href="/debt/credit-card"    class="nav__dropdown-item">Credit Card Payoff</a>
+            <a href="/debt/auto-loan"      class="nav__dropdown-item">Auto Loan / Lease</a>
+            <a href="/debt/personal-loan"  class="nav__dropdown-item">Personal Loan</a>
+          </div>
+        </div>
+        <div class="nav__dropdown" role="listitem">
+          <button class="nav__dropdown-toggle">
+            Tax
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="nav__dropdown-menu">
+            <a href="/tax/take-home-pay"   class="nav__dropdown-item">Take-Home Pay</a>
+            <a href="/tax/freelance"        class="nav__dropdown-item">Freelance Tax</a>
+            <a href="/tax/capital-gains"    class="nav__dropdown-item">Capital Gains Tax</a>
+          </div>
+        </div>
+        <div class="nav__dropdown" role="listitem">
+          <button class="nav__dropdown-toggle">
+            Tools
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="nav__dropdown-menu">
+            <a href="/specialized/inflation"   class="nav__dropdown-item">Inflation Calculator</a>
+            <a href="/specialized/rule-of-72"  class="nav__dropdown-item">Rule of 72</a>
+            <a href="/specialized/latte-factor"class="nav__dropdown-item">Latte Factor</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hamburger -->
+      <button class="nav__hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div class="nav__mobile-menu" role="dialog" aria-label="Mobile navigation">
+    <div style="margin-bottom:1rem;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted)">Mortgage</div>
+    <a href="/mortgage/repayment"     class="nav__mobile-link">Mortgage Repayment</a>
+    <a href="/mortgage/rent-vs-buy"   class="nav__mobile-link">Rent vs Buy</a>
+    <a href="/mortgage/refinance"     class="nav__mobile-link">Refinance Calculator</a>
+    <a href="/mortgage/affordability" class="nav__mobile-link">Home Affordability</a>
+    <div style="margin:1rem 0 .5rem;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted)">Investment</div>
+    <a href="/investment/compound-interest" class="nav__mobile-link">Compound Interest</a>
+    <a href="/investment/401k-pension"       class="nav__mobile-link">401(k) / Pension</a>
+    <a href="/investment/sip"                class="nav__mobile-link">SIP Calculator</a>
+    <a href="/investment/fire"               class="nav__mobile-link">FIRE Calculator</a>
+    <div style="margin:1rem 0 .5rem;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted)">Debt</div>
+    <a href="/debt/student-loan"  class="nav__mobile-link">Student Loan Refinance</a>
+    <a href="/debt/credit-card"   class="nav__mobile-link">Credit Card Payoff</a>
+    <a href="/debt/auto-loan"     class="nav__mobile-link">Auto Loan / Lease</a>
+    <a href="/debt/personal-loan" class="nav__mobile-link">Personal Loan</a>
+    <div style="margin:1rem 0 .5rem;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted)">Tax</div>
+    <a href="/tax/take-home-pay"  class="nav__mobile-link">Take-Home Pay</a>
+    <a href="/tax/freelance"       class="nav__mobile-link">Freelance Tax</a>
+    <a href="/tax/capital-gains"   class="nav__mobile-link">Capital Gains Tax</a>
+    <div style="margin:1rem 0 .5rem;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted)">Tools</div>
+    <a href="/specialized/inflation"    class="nav__mobile-link">Inflation Calculator</a>
+    <a href="/specialized/rule-of-72"   class="nav__mobile-link">Rule of 72</a>
+    <a href="/specialized/latte-factor" class="nav__mobile-link">Latte Factor</a>
+  </div>
+</nav>
+
+<!-- ═══ Main Content ══════════════════════════════════════════════════════════ -->
+<main id="main-content">
+  {% block content %}{% endblock %}
+</main>
+
+<!-- ═══ Footer ═══════════════════════════════════════════════════════════════ -->
+<footer class="footer" aria-label="Site footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a href="/" class="nav__logo" style="font-size:1.1rem">
+          <div class="nav__logo-icon" style="width:28px;height:28px;font-size:.9rem">₣</div>
+          Fin<span class="accent">Wise</span>
+        </a>
+        <p>Free, accurate financial calculators for the US, UK, EU, India &amp; Asia. No sign-up, no ads, just math.</p>
+      </div>
+      <div>
+        <div class="footer__col-title">Mortgage</div>
+        <a href="/mortgage/repayment"     class="footer__link">Repayment Calculator</a>
+        <a href="/mortgage/rent-vs-buy"   class="footer__link">Rent vs Buy</a>
+        <a href="/mortgage/refinance"     class="footer__link">Refinance Calculator</a>
+        <a href="/mortgage/affordability" class="footer__link">Home Affordability</a>
+      </div>
+      <div>
+        <div class="footer__col-title">Investment</div>
+        <a href="/investment/compound-interest" class="footer__link">Compound Interest</a>
+        <a href="/investment/401k-pension"       class="footer__link">401(k) Planner</a>
+        <a href="/investment/sip"                class="footer__link">SIP Calculator</a>
+        <a href="/investment/fire"               class="footer__link">FIRE Calculator</a>
+      </div>
+      <div>
+        <div class="footer__col-title">Debt</div>
+        <a href="/debt/student-loan"  class="footer__link">Student Loan</a>
+        <a href="/debt/credit-card"   class="footer__link">Credit Card Payoff</a>
+        <a href="/debt/auto-loan"     class="footer__link">Auto Loan / Lease</a>
+        <a href="/debt/personal-loan" class="footer__link">Personal Loan</a>
+      </div>
+      <div>
+        <div class="footer__col-title">Tax &amp; Tools</div>
+        <a href="/tax/take-home-pay"         class="footer__link">Take-Home Pay</a>
+        <a href="/tax/freelance"             class="footer__link">Freelance Tax</a>
+        <a href="/tax/capital-gains"         class="footer__link">Capital Gains</a>
+        <a href="/specialized/inflation"     class="footer__link">Inflation</a>
+        <a href="/specialized/rule-of-72"    class="footer__link">Rule of 72</a>
+        <a href="/specialized/latte-factor"  class="footer__link">Latte Factor</a>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p class="footer__disclaimer">
+        <strong>Disclaimer:</strong> All calculators are for educational and informational purposes only. Results are estimates and should not be taken as financial advice. Always consult a qualified financial advisor before making investment or tax decisions.
+      </p>
+      <div>&copy; {{ site_name }} {{ now.year if now is defined else 2025 }}. Free to use.</div>
+    </div>
+  </div>
+</footer>
+
+<!-- Chart.js CDN (defer) -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" defer></script>
+<!-- FinWise shared utilities -->
+<script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+<!-- Calculator-specific JS -->
+{% block extra_scripts %}{% endblock %}
+<script src="{{ url_for('static', filename='js/calculators.js') }}" defer></script>
+
+</body>
+</html>

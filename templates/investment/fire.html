@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block calculator_key %}fire{% endblock %}
+{% block title %}FIRE Calculator 2025 — Financial Independence Retire Early Number{% endblock %}
+{% block meta_description %}Calculate your FIRE number using the 4% safe withdrawal rule. Find out how many years until you can retire early. Includes inflation adjustment and portfolio sustainability analysis.{% endblock %}
+{% block canonical_path %}/investment/fire{% endblock %}
+{% block json_ld %}
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"WebApplication","name":"FIRE Calculator","url":"{{ site_url }}/investment/fire","applicationCategory":"FinanceApplication","offers":{"@type":"Offer","price":"0"}},
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"What is the FIRE number and how is it calculated?","acceptedAnswer":{"@type":"Answer","text":"The FIRE number is the portfolio size that allows you to retire — calculated as your annual expenses ÷ safe withdrawal rate. Using the 4% rule: if you spend $50,000/year, your FIRE number is $50,000 ÷ 0.04 = $1,250,000."}},
+  {"@type":"Question","name":"Is the 4% rule still valid in 2025?","acceptedAnswer":{"@type":"Answer","text":"The 4% rule (based on the Trinity Study) was derived for 30-year retirements. For early retirement (40+ year horizon), many experts suggest a 3–3.5% withdrawal rate for higher safety margins. The rule remains a useful starting point but should be adjusted for your specific situation."}},
+  {"@type":"Question","name":"What are the different types of FIRE?","acceptedAnswer":{"@type":"Answer","text":"LeanFIRE: retire on $25,000–$40,000/year (minimal lifestyle). Regular FIRE: $40,000–$100,000/year. FatFIRE: $100,000+/year (comfortable lifestyle). BaristaFIRE: semi-retire with part-time work. CoastFIRE: stop saving and let existing investments grow to FIRE number."}}
+]}]
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/#cat-investment">Investment</a></li><li aria-current="page">FIRE Calculator</li></ol></nav>
+    <div class="page-header__inner">
+      <div class="page-header__icon">🔥</div>
+      <div>
+        <div class="page-header__category">Investment &amp; Retirement</div>
+        <h1>FIRE Calculator — Financial Independence, Retire Early</h1>
+        <p class="page-header__desc">Calculate your FIRE number, years to financial independence, and how long your portfolio will last.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="calc-page">
+  <div class="container">
+    <div class="calc-intro"><p>The FIRE calculator computes your Financial Independence number — the portfolio size at which you can retire and live off investment returns indefinitely. Based on the famous "4% Rule" from the Trinity Study (1998), you can withdraw 4% of your portfolio annually with a historically high probability of the money lasting 30+ years. Enter your desired annual retirement spending, current savings, and annual savings rate to find how many years until you reach financial independence.</p></div>
+
+    <div class="calc-layout">
+      <div>
+        <div class="calc-panel">
+          <div class="panel-title">🔥 FIRE Parameters</div>
+          <form id="fire-form" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="fire-age">Current Age</label>
+              <input type="number" class="form-input" id="fire-age" name="current_age" value="30" min="18" max="65" step="1">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="fire-expenses">Annual Retirement Expenses</label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" class="form-input has-prefix" id="fire-expenses" name="annual_expenses" value="50000" min="5000" step="1000">
+              </div>
+              <div class="form-hint">How much you plan to spend per year in retirement</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="fire-savings">Current Investment Portfolio</label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" class="form-input has-prefix" id="fire-savings" name="current_savings" value="100000" min="0" step="5000">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="fire-annual-save">Annual Savings (Added/yr)</label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" class="form-input has-prefix" id="fire-annual-save" name="annual_savings" value="30000" min="0" step="1000">
+              </div>
+            </div>
+            <hr class="form-divider">
+            <div class="form-group">
+              <label class="form-label" for="fire-return">Expected Investment Return</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="fire-return" name="expected_return" value="7" min="1" max="20" step="0.5">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="fire-swr">Safe Withdrawal Rate</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="fire-swr" name="safe_withdrawal_rate" value="4" min="2" max="6" step="0.25">
+                <span class="input-suffix">%</span>
+              </div>
+              <div class="form-hint">4% = traditional; 3.5% = conservative for early retirement</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="fire-inflation">Expected Inflation</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="fire-inflation" name="inflation_rate" value="2.5" min="0" max="10" step="0.5">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <button type="submit" class="btn btn--primary">Calculate FIRE Date</button>
+          </form>
+        </div>
+      </div>
+      <div id="results-container">
+        <div class="empty-state"><div class="empty-state__icon">🔥</div><p>Enter your financial details to calculate your FIRE number and retirement date.</p></div>
+      </div>
+    </div>
+
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item"><button class="faq-question">What is the 4% rule and is it safe? <span class="faq-icon">+</span></button><div class="faq-answer">The 4% rule (from the 1998 Trinity Study) found that a 4% annual withdrawal from a 50/50 stock-bond portfolio survived 30-year historical retirement periods with 95%+ success. For 40+ year early retirements, consider a 3–3.5% rate. It's a planning guideline, not a guarantee.</div></div>
+      <div class="faq-item"><button class="faq-question">What is a good savings rate to reach FIRE? <span class="faq-icon">+</span></button><div class="faq-answer">Your time to FIRE is largely determined by your savings rate (savings ÷ income). Save 50% → retire in ~17 years. Save 70% → retire in ~9 years. Save 25% → retire in ~32 years. Maximizing your savings rate — by increasing income or reducing expenses — dramatically accelerates FIRE.</div></div>
+      <div class="faq-item"><button class="faq-question">What are CoastFIRE and BaristaFIRE? <span class="faq-icon">+</span></button><div class="faq-answer">CoastFIRE: stop adding to investments and let compound growth reach your FIRE number by a target age. BaristaFIRE: semi-retire to a part-time job that covers living expenses while your portfolio grows. Both reduce the required FIRE number and accelerate your timeline.</div></div>
+    </div>
+    <div class="related-section">
+      <h2>Related Calculators</h2>
+      <div class="related-grid">
+        <a href="/investment/compound-interest" class="related-card"><span class="related-card__icon">💰</span> Compound Interest</a>
+        <a href="/investment/401k-pension"      class="related-card"><span class="related-card__icon">🏦</span> 401(k) Planner</a>
+        <a href="/specialized/latte-factor"     class="related-card"><span class="related-card__icon">☕</span> Latte Factor</a>
+        <a href="/tax/take-home-pay"            class="related-card"><span class="related-card__icon">💼</span> Take-Home Pay</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

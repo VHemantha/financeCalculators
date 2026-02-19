@@ -1,0 +1,314 @@
+{% extends "base.html" %}
+
+{% block title %}Free Financial Calculators — Mortgage, Investment, Tax, Debt | FinWise 2025{% endblock %}
+
+{% block meta_description %}18 free financial calculators for US, UK, EU, India &amp; Asia. Calculate mortgage payments, compound interest, retirement savings, taxes, credit card payoff, and more. No login required.{% endblock %}
+
+{% block json_ld %}
+<script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "FinWise Calculators",
+    "url": "{{ site_url }}",
+    "description": "18 free financial calculators covering mortgage, investment, retirement, tax, and debt management for US, UK, EU, India, and Asia.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "{{ site_url }}/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Financial Calculators",
+    "itemListElement": [
+      {"@type":"ListItem","position":1,"name":"Mortgage Repayment Calculator","url":"{{ site_url }}/mortgage/repayment"},
+      {"@type":"ListItem","position":2,"name":"Compound Interest Calculator","url":"{{ site_url }}/investment/compound-interest"},
+      {"@type":"ListItem","position":3,"name":"401k Pension Planner","url":"{{ site_url }}/investment/401k-pension"},
+      {"@type":"ListItem","position":4,"name":"Take-Home Pay Calculator","url":"{{ site_url }}/tax/take-home-pay"},
+      {"@type":"ListItem","position":5,"name":"Credit Card Payoff Calculator","url":"{{ site_url }}/debt/credit-card"},
+      {"@type":"ListItem","position":6,"name":"FIRE Calculator","url":"{{ site_url }}/investment/fire"}
+    ]
+  }
+]
+</script>
+{% endblock %}
+
+{% block content %}
+
+<!-- ═══ Hero ═══════════════════════════════════════════════════════════════ -->
+<section class="hero" aria-labelledby="hero-title">
+  <div class="container">
+    <div class="hero__badge">
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+      2025 Rates Updated
+    </div>
+    <h1 class="hero__title" id="hero-title">
+      Financial Calculators for<br>
+      <span class="highlight">Smart Money Decisions</span>
+    </h1>
+    <p class="hero__subtitle">
+      18 free calculators covering mortgages, investments, retirement, taxes, and debt.
+      Designed for the US, UK, EU, India &amp; Asia. Instant results, no sign-up.
+    </p>
+    <div class="hero__actions">
+      <a href="/mortgage/repayment" class="btn btn--primary btn--lg">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>
+        Try Mortgage Calculator
+      </a>
+      <a href="#calculators" class="btn btn--secondary btn--lg">Browse All Tools ↓</a>
+    </div>
+    <div class="hero__stats">
+      <div>
+        <div class="hero__stat-value">18</div>
+        <div class="hero__stat-label">Free Calculators</div>
+      </div>
+      <div>
+        <div class="hero__stat-value">6</div>
+        <div class="hero__stat-label">Regions Covered</div>
+      </div>
+      <div>
+        <div class="hero__stat-value">0</div>
+        <div class="hero__stat-label">Sign-ups Required</div>
+      </div>
+      <div>
+        <div class="hero__stat-value">2025</div>
+        <div class="hero__stat-label">Rates Updated</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ All Calculators ════════════════════════════════════════════════════ -->
+<div id="calculators">
+
+<!-- 1. Mortgage & Real Estate -->
+<section class="category-section" aria-labelledby="cat-mortgage">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-icon section-icon--green">🏠</div>
+      <div>
+        <h2 class="section-title" id="cat-mortgage">Mortgage &amp; Real Estate</h2>
+        <p class="section-subtitle">Compare rates, calculate payments, and decide whether to rent or buy</p>
+      </div>
+    </div>
+    <div class="calc-grid">
+      <a href="/mortgage/repayment" class="calc-card">
+        <div class="calc-card__icon">💳</div>
+        <div class="calc-card__tag">Most Popular</div>
+        <h3 class="calc-card__title">Mortgage Repayment Calculator</h3>
+        <p class="calc-card__desc">Calculate your exact monthly mortgage payment, total interest paid, and full amortization schedule. Supports US, UK, Germany, India, Singapore &amp; Japan rates.</p>
+        <span class="calc-card__arrow">↗</span>
+      </a>
+      <a href="/mortgage/rent-vs-buy" class="calc-card">
+        <div class="calc-card__icon">⚖️</div>
+        <div class="calc-card__tag">Decision Tool</div>
+        <h3 class="calc-card__title">Rent vs Buy Calculator</h3>
+        <p class="calc-card__desc">Is it cheaper to rent or buy a home? Compare total costs over 5–30 years including appreciation, opportunity cost, taxes, and maintenance.</p>
+        <span class="calc-card__arrow">↗</span>
+      </a>
+      <a href="/mortgage/refinance" class="calc-card">
+        <div class="calc-card__icon">🔄</div>
+        <div class="calc-card__tag">Rate Tool</div>
+        <h3 class="calc-card__title">Mortgage Refinance Calculator</h3>
+        <p class="calc-card__desc">Find out how much you'd save by refinancing your mortgage. Calculate your break-even point, monthly savings, and lifetime interest reduction.</p>
+        <span class="calc-card__arrow">↗</span>
+      </a>
+      <a href="/mortgage/affordability" class="calc-card">
+        <div class="calc-card__icon">🏡</div>
+        <div class="calc-card__tag">Budget Tool</div>
+        <h3 class="calc-card__title">Home Affordability Calculator</h3>
+        <p class="calc-card__desc">How much house can you actually afford? Uses the 28%/36% DTI rule to calculate the maximum home price based on your income and existing debt.</p>
+        <span class="calc-card__arrow">↗</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- 2. Investment & Retirement -->
+<section class="category-section" aria-labelledby="cat-investment">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-icon section-icon--yellow">📈</div>
+      <div>
+        <h2 class="section-title" id="cat-investment">Investment &amp; Retirement</h2>
+        <p class="section-subtitle">Plan your financial future with compound interest, 401(k), SIP, and FIRE tools</p>
+      </div>
+    </div>
+    <div class="calc-grid">
+      <a href="/investment/compound-interest" class="calc-card">
+        <div class="calc-card__icon">💰</div>
+        <div class="calc-card__tag">Essential</div>
+        <h3 class="calc-card__title">Compound Interest Calculator</h3>
+        <p class="calc-card__desc">See how your money grows over time with the power of compounding. Add monthly contributions and compare daily, monthly, quarterly, and annual compounding.</p>
+        <span class="calc-card__arrow">↗</span>
+      </a>
+      <a href="/investment/401k-pension" class="calc-card">
+        <div class="calc-card__icon">🏦</div>
+        <div class="calc-card__tag">US Focused</div>
+        <h3 class="calc-card__title">401(k) / Pension Planner</h3>
+        <p class="calc-card__desc">Project your retirement savings using 2025 IRS contribution limits ($23,500). Factor in employer match, salary growth, and inflation to estimate your monthly retirement income.</p>
+        <span class="calc-card__arrow">↗</span>
+      </a>
+      <a href="/investment/sip" class="calc-card">
+        <div class="calc-card__icon">📊</div>
+        <div class="calc-card__tag">India/Asia</div>
+        <h3 class="calc-card__title">SIP Calculator</h3>
+        <p class="calc-card__desc">Calculate returns on your Systematic Investment Plan. Includes Nifty 50 preset (12% p.a.) and step-up SIP to visualize how small regular investments compound into wealth.</p>
+        <span class="calc-card__arrow">↗</span>
+      </a>
+      <a href="/investment/fire" class="calc-card">
+        <div class="calc-card__icon">🔥</div>
+        <div class="calc-card__tag">Trending</div>
+        <h3 class="calc-card__title">FIRE Calculator</h3>
+        <p class="calc-card__desc">Financial Independence, Retire Early. Calculate your FIRE number using the 4% safe withdrawal rule and find out exactly how many years until you can retire.</p>
+        <span class="calc-card__arrow">↗</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- 3. Debt & Loan Management -->
+<section class="category-section" aria-labelledby="cat-debt">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-icon section-icon--green">📋</div>
+      <div>
+        <h2 class="section-title" id="cat-debt">Debt &amp; Loan Management</h2>
+        <p class="section-subtitle">Pay off debt faster, refinance smarter, and understand your true loan costs</p>
+      </div>
+    </div>
+    <div class="calc-grid">
+      <a href="/debt/student-loan" class="calc-card">
+        <div class="calc-card__icon">🎓</div>
+        <div class="calc-card__tag">US Rates 2025</div>
+        <h3 class="calc-card__title">Student Loan Refinance Calculator</h3>
+        <p class="calc-card__desc">Compare refinancing options for federal student loans. Uses 2025-26 rates: 6.53% undergrad, 8.08% grad, 9.08% PLUS. Calculates lifetime savings and break-even months.</p>
+        <span class="calc-card__arrow">↗</span>
+      </a>
+      <a href="/debt/credit-card" class="calc-card">
+        <div class="calc-card__icon">💳</div>
+        <div class="calc-card__tag">Debt Buster</div>
+        <h3 class="calc-card__title">Credit Card Payoff Calculator</h3>
+        <p class="calc-card__desc">Find out exactly when you'll be debt-free. US average APR is 21.5%. See how much interest you save by paying more than the minimum and compare payoff strategies.</p>
+        <span class="calc-card__arrow">↗</span>
+      </a>
+      <a href="/debt/auto-loan" class="calc-card">
+        <div class="calc-card__icon">🚗</div>
+        <div class="calc-card__tag">Buy vs Lease</div>
+        <h3 class="calc-card__title">Auto Loan / Car Lease Calculator</h3>
+        <p class="calc-card__desc">Calculate your monthly car payment and compare buying versus leasing. Factors in down payment, trade-in value, sales tax, and the true cost of a lease money factor.</p>
+        <span class="calc-card__arrow">↗</span>
+      </a>
+      <a href="/debt/personal-loan" class="calc-card">
+        <div class="calc-card__icon">🏧</div>
+        <div class="calc-card__tag">Eligibility</div>
+        <h3 class="calc-card__title">Personal Loan Eligibility</h3>
+        <p class="calc-card__desc">Estimate your personal loan APR based on your credit score (300–850), income, and DTI. See your likely rate range before you apply and understand approval factors.</p>
+        <span class="calc-card__arrow">↗</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- 4. Tax & Salary -->
+<section class="category-section" aria-labelledby="cat-tax">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-icon section-icon--yellow">📝</div>
+      <div>
+        <h2 class="section-title" id="cat-tax">Taxation &amp; Salary</h2>
+        <p class="section-subtitle">US, UK, and India tax calculators with 2025 brackets and rates</p>
+      </div>
+    </div>
+    <div class="calc-grid">
+      <a href="/tax/take-home-pay" class="calc-card">
+        <div class="calc-card__icon">💼</div>
+        <div class="calc-card__tag">US · UK · India</div>
+        <h3 class="calc-card__title">Take-Home Pay Calculator</h3>
+        <p class="calc-card__desc">Calculate your net salary after tax for US (federal + FICA + state), UK (income tax + National Insurance), or India (new vs old regime). 2025 tax brackets included.</p>
+        <span class="calc-card__arrow">↗</span>
+      </a>
+      <a href="/tax/freelance" class="calc-card">
+        <div class="calc-card__icon">💻</div>
+        <div class="calc-card__tag">Gig Economy</div>
+        <h3 class="calc-card__title">Freelance Tax Estimator</h3>
+        <p class="calc-card__desc">Freelancers and self-employed: estimate your annual tax bill and quarterly payment schedule. US self-employment tax is 15.3%. Also covers UK NIC and India Section 44ADA.</p>
+        <span class="calc-card__arrow">↗</span>
+      </a>
+      <a href="/tax/capital-gains" class="calc-card">
+        <div class="calc-card__icon">📉</div>
+        <div class="calc-card__tag">Investors</div>
+        <h3 class="calc-card__title">Capital Gains Tax Calculator</h3>
+        <p class="calc-card__desc">Calculate tax on profits from stocks, property, and other assets. Covers US LTCG/STCG rates, UK's updated 18%/24% rates (Oct 2024), and India's 12.5% LTCG equity rate.</p>
+        <span class="calc-card__arrow">↗</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- 5. Specialized Tools -->
+<section class="category-section" aria-labelledby="cat-tools">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-icon section-icon--green">🔧</div>
+      <div>
+        <h2 class="section-title" id="cat-tools">Specialized Financial Tools</h2>
+        <p class="section-subtitle">Niche calculators with lower competition — perfect for quick insights</p>
+      </div>
+    </div>
+    <div class="calc-grid">
+      <a href="/specialized/inflation" class="calc-card">
+        <div class="calc-card__icon">📅</div>
+        <div class="calc-card__tag">Historical</div>
+        <h3 class="calc-card__title">Inflation Calculator</h3>
+        <p class="calc-card__desc">Calculate the purchasing power of money over time. US data from 1913 to 2024. Also covers EU HICP and India CPI. Find out what $100 in 1990 is worth today.</p>
+        <span class="calc-card__arrow">↗</span>
+      </a>
+      <a href="/specialized/rule-of-72" class="calc-card">
+        <div class="calc-card__icon">✖️</div>
+        <div class="calc-card__tag">Quick Math</div>
+        <h3 class="calc-card__title">Rule of 72 Calculator</h3>
+        <p class="calc-card__desc">Instantly estimate how long it takes to double your money at any interest rate. Includes Rules of 114 (triple) and 144 (quadruple), plus exact logarithmic calculations.</p>
+        <span class="calc-card__arrow">↗</span>
+      </a>
+      <a href="/specialized/latte-factor" class="calc-card">
+        <div class="calc-card__icon">☕</div>
+        <div class="calc-card__tag">Lifestyle</div>
+        <h3 class="calc-card__title">Latte Factor Calculator</h3>
+        <p class="calc-card__desc">What if you invested your daily $5 coffee instead? See how small daily expenses compound into surprising wealth over 10, 20, or 30 years at market return rates.</p>
+        <span class="calc-card__arrow">↗</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+</div><!-- /#calculators -->
+
+<!-- ═══ Why FinWise ════════════════════════════════════════════════════════ -->
+<section style="padding: var(--s16) 0; background: var(--bg-surface); border-top: 1px solid var(--border);" aria-labelledby="why-title">
+  <div class="container">
+    <h2 id="why-title" style="text-align:center;margin-bottom:var(--s10)">Why Choose FinWise Calculators?</h2>
+    <div class="grid-3">
+      <div style="text-align:center;padding:var(--s6)">
+        <div style="font-size:2rem;margin-bottom:var(--s3)">🌍</div>
+        <h3>Global Coverage</h3>
+        <p>All calculators support US, UK, EU (Germany, France), India, Singapore, and Japan — with region-specific tax brackets and interest rate presets.</p>
+      </div>
+      <div style="text-align:center;padding:var(--s6)">
+        <div style="font-size:2rem;margin-bottom:var(--s3)">⚡</div>
+        <h3>Instant Previews</h3>
+        <p>Results update as you type — no need to click "Calculate" for every small change. Powered by the same financial formulas used by banks and financial planners.</p>
+      </div>
+      <div style="text-align:center;padding:var(--s6)">
+        <div style="font-size:2rem;margin-bottom:var(--s3)">🔒</div>
+        <h3>Private &amp; Free</h3>
+        <p>No account required. No data stored. No paywalls. All calculations happen on our servers and are never saved or tracked. 100% free forever.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

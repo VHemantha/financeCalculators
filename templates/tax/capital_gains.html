@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block calculator_key %}capitalGains{% endblock %}
+{% block title %}Capital Gains Tax Calculator 2025 — US LTCG, UK CGT, India Equity Tax{% endblock %}
+{% block meta_description %}Calculate capital gains tax on stocks and property for US (LTCG 0%/15%/20%), UK (18%/24% post Oct 2024), and India (12.5% equity LTCG, 20% STCG). Free 2025 CGT calculator.{% endblock %}
+{% block canonical_path %}/tax/capital-gains{% endblock %}
+{% block json_ld %}
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"WebApplication","name":"Capital Gains Tax Calculator","url":"{{ site_url }}/tax/capital-gains","applicationCategory":"FinanceApplication","offers":{"@type":"Offer","price":"0"}},
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"What is the long-term capital gains tax rate in the US for 2025?","acceptedAnswer":{"@type":"Answer","text":"US long-term capital gains tax rates for 2025 (single filers): 0% on income up to $48,350, 15% on income up to $533,400, 20% above $533,400. An additional 3.8% Net Investment Income Tax (NIIT) applies to high earners above $200,000 (single)."}},
+  {"@type":"Question","name":"What are the UK capital gains tax rates in 2025?","acceptedAnswer":{"@type":"Answer","text":"Following the October 2024 Autumn Budget, UK CGT rates are: 18% for basic rate taxpayers, 24% for higher/additional rate taxpayers — applying to all assets including shares and residential property. The annual exempt amount is £3,000 for 2025-26."}},
+  {"@type":"Question","name":"What is India's capital gains tax on equity in 2025?","acceptedAnswer":{"@type":"Answer","text":"India equity LTCG (held 12+ months): 12.5% on gains above ₹1.25 lakh per year (post July 2024 Budget). STCG (held under 12 months): 20%. Plus 4% cess on tax. Property LTCG: 20% without indexation (changed post-July 2024)."}}
+]}]
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/#cat-tax">Tax &amp; Salary</a></li><li aria-current="page">Capital Gains Tax</li></ol></nav>
+    <div class="page-header__inner">
+      <div class="page-header__icon">📉</div>
+      <div>
+        <div class="page-header__category">Taxation &amp; Salary</div>
+        <h1>Capital Gains Tax Calculator</h1>
+        <p class="page-header__desc">Calculate tax on profits from stocks, property, and other assets for the US, UK, or India using the latest 2025 rates.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="calc-page">
+  <div class="container">
+    <div class="calc-intro"><p>This capital gains tax calculator covers all three major regimes with 2025 rates. For the US: it distinguishes short-term gains (taxed as ordinary income) from long-term gains (0%/15%/20% depending on income), and applies the 3.8% Net Investment Income Tax where applicable. For the UK: applies the October 2024 revised rates (18%/24%) with the £3,000 annual exempt amount. For India: uses the post-July 2024 Budget rates including the revised 12.5% LTCG on equity and the ₹1.25 lakh exemption threshold.</p></div>
+
+    <div class="calc-layout">
+      <div>
+        <div class="calc-panel">
+          <div class="panel-title">📉 Asset &amp; Sale Details</div>
+          <form id="capitalGains-form" novalidate>
+            <div class="form-group">
+              <label class="form-label">Country</label>
+              <div class="tab-group" id="cg-country-tabs">
+                <button type="button" class="tab is-active" data-country="US">🇺🇸 US</button>
+                <button type="button" class="tab" data-country="UK">🇬🇧 UK</button>
+                <button type="button" class="tab" data-country="IN">🇮🇳 India</button>
+              </div>
+              <input type="hidden" id="cg-country" name="country" value="US">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cg-asset">Asset Type</label>
+              <select class="form-select" id="cg-asset" name="asset_type">
+                <option value="equity">Stocks / Equity / Mutual Funds</option>
+                <option value="property">Real Estate / Property</option>
+                <option value="other">Other (Collectibles, Crypto, etc.)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cg-purchase">Purchase Price</label>
+              <div class="input-wrap"><span class="input-prefix" id="cg-currency">$</span>
+                <input type="number" class="form-input has-prefix" id="cg-purchase" name="purchase_price" value="50000" min="0" step="1000">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cg-sale">Sale Price</label>
+              <div class="input-wrap"><span class="input-prefix" id="cg-sale-currency">$</span>
+                <input type="number" class="form-input has-prefix" id="cg-sale" name="sale_price" value="100000" min="0" step="1000">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cg-holding">Holding Period</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="cg-holding" name="holding_months" value="18" min="0" max="480" step="1">
+                <span class="input-suffix">months</span>
+              </div>
+              <div class="form-hint">US: 12+ months = LTCG. India equity: 12+ months = LTCG. Property: 24+ months.</div>
+            </div>
+            <div id="cg-us-options">
+              <div class="form-group">
+                <label class="form-label" for="cg-income">Annual Income (for rate bracket)</label>
+                <div class="input-wrap"><span class="input-prefix">$</span>
+                  <input type="number" class="form-input has-prefix" id="cg-income" name="annual_income" value="80000" min="0" step="5000">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="cg-filing">Filing Status</label>
+                <select class="form-select" id="cg-filing" name="filing_status">
+                  <option value="single">Single</option>
+                  <option value="mfj">Married Filing Jointly</option>
+                </select>
+              </div>
+            </div>
+            <div id="cg-uk-options" class="hidden">
+              <div class="form-group">
+                <label class="form-label" for="cg-uk-income">Annual Income (£)</label>
+                <div class="input-wrap"><span class="input-prefix">£</span>
+                  <input type="number" class="form-input has-prefix" id="cg-uk-income" name="annual_income" value="45000" min="0" step="5000">
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn--primary">Calculate Capital Gains Tax</button>
+          </form>
+        </div>
+      </div>
+      <div id="results-container">
+        <div class="empty-state"><div class="empty-state__icon">📉</div><p>Enter your purchase and sale prices to calculate your capital gains tax liability.</p></div>
+      </div>
+    </div>
+
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item"><button class="faq-question">US: What is the difference between LTCG and STCG? <span class="faq-icon">+</span></button><div class="faq-answer">Short-term capital gains (assets held under 12 months) are taxed as ordinary income — at your marginal rate of up to 37%. Long-term gains (12+ months) qualify for preferential rates: 0%, 15%, or 20% depending on your taxable income. This tax rate advantage is a powerful reason to hold investments for over one year.</div></div>
+      <div class="faq-item"><button class="faq-question">UK: How did the October 2024 budget change CGT? <span class="faq-icon">+</span></button><div class="faq-answer">The October 2024 Autumn Budget immediately raised CGT rates: the basic rate on all assets went from 10% to 18%, and the higher rate from 20% to 24%. The rates for residential property (previously 18%/28%) were aligned to the new 18%/24% rates. The Business Asset Disposal Relief rate rose from 10% to 14%, and will increase further to 18%.</div></div>
+      <div class="faq-item"><button class="faq-question">India: What changed in Budget 2024 for capital gains? <span class="faq-icon">+</span></button><div class="faq-answer">The Union Budget 2024 (effective July 23, 2024) changed: equity LTCG rate raised from 10% to 12.5%, LTCG exemption threshold raised from ₹1L to ₹1.25L. Equity STCG rate raised from 15% to 20%. Property LTCG rate standardized to 20% without indexation (indexation removed for post-July 2024 transactions).</div></div>
+    </div>
+    <div class="related-section">
+      <h2>Related Calculators</h2>
+      <div class="related-grid">
+        <a href="/tax/take-home-pay" class="related-card"><span class="related-card__icon">💼</span> Take-Home Pay</a>
+        <a href="/investment/sip"    class="related-card"><span class="related-card__icon">📊</span> SIP Calculator</a>
+        <a href="/investment/fire"   class="related-card"><span class="related-card__icon">🔥</span> FIRE Calculator</a>
+        <a href="/tax/freelance"     class="related-card"><span class="related-card__icon">💻</span> Freelance Tax</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block calculator_key %}takeHomePay{% endblock %}
+{% block title %}Take-Home Pay Calculator 2025 — US, UK &amp; India Net Salary After Tax{% endblock %}
+{% block meta_description %}Calculate your net take-home salary after tax for the US (federal+FICA+state), UK (income tax+NI), or India (new vs old regime). 2025 tax brackets. Free salary calculator.{% endblock %}
+{% block canonical_path %}/tax/take-home-pay{% endblock %}
+{% block json_ld %}
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"WebApplication","name":"Take-Home Pay Calculator","url":"{{ site_url }}/tax/take-home-pay","applicationCategory":"FinanceApplication","offers":{"@type":"Offer","price":"0"}},
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"What is the take-home pay on $100,000 salary in the US?","acceptedAnswer":{"@type":"Answer","text":"On a $100,000 gross salary (single filer, no state tax), you'd take home approximately $73,000–$76,000 after federal income tax (~$17,000), Social Security (~$6,200), and Medicare (~$1,450). State taxes vary significantly — California adds ~$5,800; Texas, Florida, Washington: $0."}},
+  {"@type":"Question","name":"What are the 2025 US federal income tax brackets?","acceptedAnswer":{"@type":"Answer","text":"2025 tax brackets (single filers): 10% on income up to $11,925; 12% up to $48,475; 22% up to $103,350; 24% up to $197,300; 32% up to $250,525; 35% up to $626,350; 37% above $626,350. Standard deduction for single filers is $15,000."}},
+  {"@type":"Question","name":"How much NI do I pay in the UK in 2025?","acceptedAnswer":{"@type":"Answer","text":"UK employee National Insurance (2025-26): 8% on earnings between £6,396 and £50,270 per year, then 2% on earnings above £50,270. On a £50,000 salary, you'd pay approximately £3,515 in NI contributions."}}
+]}]
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/#cat-tax">Tax &amp; Salary</a></li><li aria-current="page">Take-Home Pay</li></ol></nav>
+    <div class="page-header__inner">
+      <div class="page-header__icon">💼</div>
+      <div>
+        <div class="page-header__category">Taxation &amp; Salary</div>
+        <h1>Take-Home Pay Calculator</h1>
+        <p class="page-header__desc">Calculate your net salary after income tax and social contributions for the US, UK, or India using 2025 tax brackets.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="calc-page">
+  <div class="container">
+    <div class="calc-intro"><p>This take-home pay calculator computes your actual net income after all taxes and social security contributions for three major regions. For the US: federal income tax (2025 brackets), Social Security (6.2% up to $176,100), Medicare (1.45% + 0.9% above $200k), and state income tax for major states. For the UK: income tax (2025-26 rates with personal allowance), and National Insurance contributions. For India: new regime or old regime tax calculations including cess, surcharge, and Section 87A rebate.</p></div>
+
+    <div class="calc-layout">
+      <div>
+        <div class="calc-panel">
+          <div class="panel-title">💼 Salary Details</div>
+          <form id="takeHomePay-form" novalidate>
+            <div class="form-group">
+              <label class="form-label">Country</label>
+              <div class="tab-group" id="thp-country-tabs">
+                <button type="button" class="tab is-active" data-country="US">🇺🇸 US</button>
+                <button type="button" class="tab" data-country="UK">🇬🇧 UK</button>
+                <button type="button" class="tab" data-country="IN">🇮🇳 India</button>
+              </div>
+              <input type="hidden" id="thp-country" name="country" value="US">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="thp-gross">Gross Annual Income</label>
+              <div class="input-wrap"><span class="input-prefix" id="thp-currency">$</span>
+                <input type="number" class="form-input has-prefix" id="thp-gross" name="gross_income" value="80000" min="1000" step="1000">
+              </div>
+            </div>
+
+            <!-- US-specific options -->
+            <div id="us-options">
+              <div class="form-group">
+                <label class="form-label" for="thp-filing">Filing Status</label>
+                <select class="form-select" id="thp-filing" name="filing_status">
+                  <option value="single">Single</option>
+                  <option value="mfj">Married Filing Jointly</option>
+                  <option value="hoh">Head of Household</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="thp-state">State</label>
+                <select class="form-select" id="thp-state" name="state">
+                  <option value="TX">Texas (0%)</option>
+                  <option value="FL">Florida (0%)</option>
+                  <option value="WA">Washington (0%)</option>
+                  <option value="NV">Nevada (0%)</option>
+                  <option value="NY">New York (~6.85%)</option>
+                  <option value="CA">California (~9.3%)</option>
+                  <option value="IL">Illinois (~4.95%)</option>
+                  <option value="MA">Massachusetts (5%)</option>
+                  <option value="NJ">New Jersey (~6.37%)</option>
+                  <option value="other">Other (~5% est.)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- India-specific options -->
+            <div id="india-options" class="hidden">
+              <div class="form-group">
+                <label class="form-label">Tax Regime</label>
+                <div class="tab-group">
+                  <button type="button" class="tab is-active" data-regime="new" onclick="document.getElementById('thp-regime').value='new'">New Regime</button>
+                  <button type="button" class="tab" data-regime="old" onclick="document.getElementById('thp-regime').value='old'">Old Regime</button>
+                </div>
+                <input type="hidden" id="thp-regime" name="regime" value="new">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="thp-freq">Show Pay Period</label>
+              <select class="form-select" id="thp-freq" name="pay_frequency">
+                <option value="annual">Annual</option>
+                <option value="monthly" selected>Monthly</option>
+                <option value="biweekly">Bi-Weekly</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn--primary">Calculate Take-Home Pay</button>
+          </form>
+        </div>
+      </div>
+      <div id="results-container">
+        <div class="empty-state"><div class="empty-state__icon">💼</div><p>Select your country and enter your gross salary to calculate your net take-home pay.</p></div>
+      </div>
+    </div>
+
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item"><button class="faq-question">What are the 2025 US federal tax brackets? <span class="faq-icon">+</span></button><div class="faq-answer">2025 brackets (single): 10% ($0–$11,925), 12% ($11,926–$48,475), 22% ($48,476–$103,350), 24% ($103,351–$197,300), 32% ($197,301–$250,525), 35% ($250,526–$626,350), 37% (above $626,350). Standard deduction: $15,000 single, $30,000 MFJ.</div></div>
+      <div class="faq-item"><button class="faq-question">How is India's new regime different from the old regime? <span class="faq-icon">+</span></button><div class="faq-answer">New regime (2025-26): lower tax rates, higher nil slab (up to ₹4L), standard deduction ₹75,000, but no deductions for HRA, 80C investments, home loan interest, etc. Old regime: higher rates but allows deductions that can significantly reduce taxable income for those with home loans, insurance, PPF contributions.</div></div>
+      <div class="faq-item"><button class="faq-question">What is the UK personal allowance for 2025-26? <span class="faq-icon">+</span></button><div class="faq-answer">The 2025-26 UK personal allowance is £12,570 — frozen since 2021-22. Above £100,000, the allowance is tapered (£1 lost per £2 earned), fully eliminated at £125,140. This creates an effective 60% marginal tax rate on income between £100,000–£125,140 due to the allowance withdrawal.</div></div>
+    </div>
+    <div class="related-section">
+      <h2>Related Calculators</h2>
+      <div class="related-grid">
+        <a href="/tax/freelance"             class="related-card"><span class="related-card__icon">💻</span> Freelance Tax</a>
+        <a href="/tax/capital-gains"         class="related-card"><span class="related-card__icon">📉</span> Capital Gains Tax</a>
+        <a href="/investment/401k-pension"   class="related-card"><span class="related-card__icon">🏦</span> 401(k) Planner</a>
+        <a href="/mortgage/affordability"    class="related-card"><span class="related-card__icon">🏡</span> Home Affordability</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

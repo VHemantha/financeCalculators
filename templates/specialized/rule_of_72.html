@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block calculator_key %}ruleOf72{% endblock %}
+{% block title %}Rule of 72 Calculator 2025 — How Long to Double Your Money{% endblock %}
+{% block meta_description %}Instantly calculate how long it takes to double your money using the Rule of 72. Also includes Rule of 114 (triple) and Rule of 144 (quadruple). Bidirectional: rate→years or years→rate.{% endblock %}
+{% block canonical_path %}/specialized/rule-of-72{% endblock %}
+{% block json_ld %}
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"WebApplication","name":"Rule of 72 Calculator","url":"{{ site_url }}/specialized/rule-of-72","applicationCategory":"FinanceApplication","offers":{"@type":"Offer","price":"0"}},
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"What is the Rule of 72?","acceptedAnswer":{"@type":"Answer","text":"The Rule of 72 is a quick mental math shortcut: divide 72 by the annual interest rate to estimate how many years it takes to double your money. At 8% annual return, money doubles in 72 ÷ 8 = 9 years. It works best for rates between 6–10%."}},
+  {"@type":"Question","name":"How accurate is the Rule of 72?","acceptedAnswer":{"@type":"Answer","text":"The Rule of 72 is an approximation. The exact doubling time is ln(2) ÷ ln(1 + r) — at 8%, that's 9.006 years vs 72/8 = 9 years. The approximation is most accurate between 6–10% and less accurate at extreme rates (1% or 50%)."}},
+  {"@type":"Question","name":"What is the Rule of 114 and Rule of 144?","acceptedAnswer":{"@type":"Answer","text":"Rule of 114: divide 114 by the annual rate to estimate years to triple your money. Rule of 144: divide 144 by the annual rate to estimate years to quadruple your money. At 10% return: double in 7.2 years, triple in 11.4 years, quadruple in 14.4 years."}}
+]}]
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/#cat-tools">Tools</a></li><li aria-current="page">Rule of 72</li></ol></nav>
+    <div class="page-header__inner">
+      <div class="page-header__icon">✖️</div>
+      <div>
+        <div class="page-header__category">Specialized Tools</div>
+        <h1>Rule of 72 Calculator</h1>
+        <p class="page-header__desc">Instantly estimate how long to double, triple, or quadruple your money — and the return rate you need to achieve it.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="calc-page">
+  <div class="container">
+    <div class="calc-intro"><p>The Rule of 72 is a classic mental math shortcut for estimating investment doubling time. Simply divide 72 by the annual return rate to find the years to double your money. This calculator works bidirectionally: enter a rate to get years, or enter a target number of years to find the required rate. It also shows the Rules of 114 (triple) and 144 (quadruple), plus the mathematically exact values using the logarithmic formula for comparison.</p></div>
+
+    <div class="calc-layout">
+      <div>
+        <div class="calc-panel">
+          <div class="panel-title">✖️ Rule of 72 Input</div>
+          <form id="ruleOf72-form" novalidate>
+            <div class="form-group">
+              <label class="form-label">Mode</label>
+              <div class="tab-group" id="r72-mode-tabs">
+                <button type="button" class="tab is-active" data-mode="rate_to_years">Rate → Years</button>
+                <button type="button" class="tab" data-mode="years_to_rate">Years → Rate</button>
+              </div>
+              <input type="hidden" id="r72-mode" name="mode" value="rate_to_years">
+            </div>
+            <div class="form-group" id="r72-rate-group">
+              <label class="form-label" for="r72-value-rate">Annual Return Rate</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="r72-value-rate" name="value" value="8" min="0.1" max="100" step="0.5">
+                <span class="input-suffix">%</span>
+              </div>
+              <div class="form-hint">Common rates: savings 4%, bonds 5%, stocks 7–10%, real estate 5–8%</div>
+            </div>
+            <div class="form-group hidden" id="r72-years-group">
+              <label class="form-label" for="r72-value-years">Target Years to Double</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="r72-value-years" name="value_years" value="10" min="1" max="72" step="1">
+                <span class="input-suffix">years</span>
+              </div>
+            </div>
+            <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:var(--r-sm);padding:var(--s3) var(--s4);margin-top:var(--s4)">
+              <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin-bottom:var(--s2)">Live Preview</div>
+              <div style="display:flex;justify-content:space-between">
+                <span style="font-size:.8rem;color:var(--text-secondary)">Years to Double</span>
+                <span style="font-family:var(--font-heading);font-size:1.3rem;font-weight:700;color:var(--yellow-400)" id="preview-monthly">—</span>
+              </div>
+            </div>
+            <button type="submit" class="btn btn--primary">Calculate</button>
+          </form>
+
+          <!-- Quick reference table -->
+          <div style="margin-top:var(--s6);border-top:1px solid var(--border);padding-top:var(--s4)">
+            <div style="font-size:.8rem;font-weight:600;color:var(--text-secondary);margin-bottom:var(--s3)">Quick Reference</div>
+            <table style="width:100%;font-size:.78rem;border-collapse:collapse">
+              <thead><tr style="color:var(--text-muted)"><th style="text-align:left;padding:4px 0">Rate</th><th style="text-align:right">Double</th><th style="text-align:right">Triple</th></tr></thead>
+              <tbody id="r72-quick-table">
+                <tr><td style="color:var(--text-secondary)">4%</td><td style="text-align:right;color:var(--green-400)">18.0 yr</td><td style="text-align:right;color:var(--yellow-400)">28.5 yr</td></tr>
+                <tr><td style="color:var(--text-secondary)">6%</td><td style="text-align:right;color:var(--green-400)">12.0 yr</td><td style="text-align:right;color:var(--yellow-400)">19.0 yr</td></tr>
+                <tr><td style="color:var(--text-secondary)">8%</td><td style="text-align:right;color:var(--green-400)">9.0 yr</td><td style="text-align:right;color:var(--yellow-400)">14.25 yr</td></tr>
+                <tr><td style="color:var(--text-secondary)">10%</td><td style="text-align:right;color:var(--green-400)">7.2 yr</td><td style="text-align:right;color:var(--yellow-400)">11.4 yr</td></tr>
+                <tr><td style="color:var(--text-secondary)">12%</td><td style="text-align:right;color:var(--green-400)">6.0 yr</td><td style="text-align:right;color:var(--yellow-400)">9.5 yr</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div id="results-container">
+        <div class="empty-state"><div class="empty-state__icon">✖️</div><p>Enter a rate or time period to calculate doubling, tripling, and quadrupling times.</p></div>
+      </div>
+    </div>
+
+    <div class="how-it-works">
+      <h2>The Math Behind Rule of 72</h2>
+      <p>The exact doubling time uses logarithms:</p>
+      <div class="formula-box">Years = ln(2) / ln(1 + r) = 0.6931 / ln(1 + r)</div>
+      <p>The Rule of 72 approximates this using a simpler division: <strong>Years ≈ 72 / rate%</strong>. The number 72 works because it's close to <code>100 × ln(2) = 69.3</code> and is divisible by many common rates (2, 3, 4, 6, 8, 9, 12). For more accuracy at high rates, use 70 instead of 72.</p>
+    </div>
+
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item"><button class="faq-question">Why 72 and not 70 or 69? <span class="faq-icon">+</span></button><div class="faq-answer">The mathematically precise constant is 69.3 (100 × ln 2). Rule of 70 is also used. Rule of 72 is popular because 72 is highly composite — divisible by 2, 3, 4, 6, 8, 9, 12, 24 — making mental math easier. At 8%: 72÷8=9 (exact: 9.006). At 6%: 72÷6=12 (exact: 11.9). Rule of 72 is slightly more accurate than 70 for the 6–10% range.</div></div>
+      <div class="faq-item"><button class="faq-question">How does inflation affect the Rule of 72? <span class="faq-icon">+</span></button><div class="faq-answer">The Rule of 72 works for inflation too. At 3% inflation, prices double in 72÷3 = 24 years. At 7% inflation (as in 2022), prices double in about 10 years. This is why sustained inflation above 3% significantly erodes savings and why real returns (nominal − inflation) matter more than nominal returns.</div></div>
+      <div class="faq-item"><button class="faq-question">What returns do common investments earn? <span class="faq-icon">+</span></button><div class="faq-answer">Historical average annual returns: US stocks (S&P 500): ~10% nominal, ~7% real. International stocks: ~7% nominal. Bonds (10-yr Treasury): ~4–5% nominal. Real estate (REITs): ~9–10%. High-yield savings accounts: ~4–5% (2025). Inflation (~2.5–3%) erodes these returns in real terms.</div></div>
+    </div>
+    <div class="related-section">
+      <h2>Related Calculators</h2>
+      <div class="related-grid">
+        <a href="/investment/compound-interest" class="related-card"><span class="related-card__icon">💰</span> Compound Interest</a>
+        <a href="/specialized/inflation"        class="related-card"><span class="related-card__icon">📅</span> Inflation</a>
+        <a href="/investment/sip"               class="related-card"><span class="related-card__icon">📊</span> SIP Calculator</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

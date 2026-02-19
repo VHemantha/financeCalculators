@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block calculator_key %}latteFactor{% endblock %}
+{% block title %}Latte Factor Calculator 2025 — How Much Could Your Daily Spending Save?{% endblock %}
+{% block meta_description %}Calculate how much you'd save by investing your daily coffee habit instead. See 10, 20, 30-year projections. David Bach's Latte Factor visualized. Free 2025 savings calculator.{% endblock %}
+{% block canonical_path %}/specialized/latte-factor{% endblock %}
+{% block json_ld %}
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"WebApplication","name":"Latte Factor Calculator","url":"{{ site_url }}/specialized/latte-factor","applicationCategory":"FinanceApplication","offers":{"@type":"Offer","price":"0"}},
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"What is the Latte Factor?","acceptedAnswer":{"@type":"Answer","text":"The Latte Factor is a concept by David Bach (author of 'The Automatic Millionaire') that shows how small, daily discretionary spending (like a $5 coffee) adds up to significant wealth when invested instead. The key insight: automating small savings creates compound growth that far exceeds the original spending."}},
+  {"@type":"Question","name":"How much does a $5 daily coffee cost over 30 years?","acceptedAnswer":{"@type":"Answer","text":"$5/day invested at 7% annual return over 30 years grows to approximately $185,000. The total invested is only $54,750 — the remaining $130,000+ comes from compound growth. This illustrates the opportunity cost of small daily habits."}},
+  {"@type":"Question","name":"Is the Latte Factor realistic advice?","acceptedAnswer":{"@type":"Answer","text":"The Latte Factor is more of an illustration of compound growth than literal investment advice. The key principle is valid: automating even small amounts into investments creates surprising long-term wealth. However, critics note that housing and healthcare costs far exceed the impact of coffee spending, and lifestyle deprivation isn't sustainable."}}
+]}]
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/#cat-tools">Tools</a></li><li aria-current="page">Latte Factor</li></ol></nav>
+    <div class="page-header__inner">
+      <div class="page-header__icon">☕</div>
+      <div>
+        <div class="page-header__category">Specialized Tools</div>
+        <h1>Latte Factor Calculator</h1>
+        <p class="page-header__desc">Visualize how small daily expenses compound into surprising wealth when invested over 10, 20, or 30 years.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="calc-page">
+  <div class="container">
+    <div class="calc-intro"><p>The Latte Factor, popularized by financial author David Bach, illustrates how small daily discretionary expenses — a coffee, a lunch out, a streaming subscription — translate into significant investment opportunities when redirected into compound-growth investments. This calculator shows the nominal growth (what you'd accumulate) and the inflation-adjusted real value, so you can see exactly what that daily habit is costing you in future wealth. Try different amounts and time horizons to find your personal "latte factor."</p></div>
+
+    <div class="calc-layout">
+      <div>
+        <div class="calc-panel">
+          <div class="panel-title">☕ Daily Expense</div>
+          <form id="latteFactor-form" novalidate>
+            <!-- Quick presets -->
+            <div class="form-group">
+              <label class="form-label">Quick Presets</label>
+              <div style="display:flex;flex-wrap:wrap;gap:var(--s2)">
+                <button type="button" class="btn btn--ghost btn--sm" data-expense="5">☕ Coffee $5</button>
+                <button type="button" class="btn btn--ghost btn--sm" data-expense="15">🍱 Lunch $15</button>
+                <button type="button" class="btn btn--ghost btn--sm" data-expense="0.5">📱 Streaming $0.50</button>
+                <button type="button" class="btn btn--ghost btn--sm" data-expense="20">🍕 Dining $20</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="lf-expense">Daily Expense Amount</label>
+              <div class="input-wrap"><span class="input-prefix">$</span>
+                <input type="number" class="form-input has-prefix" id="lf-expense" name="daily_expense" value="5" min="0.5" max="500" step="0.5">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="lf-return">Investment Annual Return</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="lf-return" name="annual_return" value="7" min="1" max="20" step="0.5">
+                <span class="input-suffix">%</span>
+              </div>
+              <div class="form-hint">S&P 500 avg: 10% | Conservative: 5–7%</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="lf-inflation">Inflation Rate</label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="lf-inflation" name="inflation_rate" value="2.5" min="0" max="10" step="0.5">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="lf-years">
+                Time Horizon
+                <span class="form-label-hint" id="lf-years-display">30 years</span>
+              </label>
+              <input type="range" class="form-range" id="lf-years" name="years" value="30" min="1" max="50" step="1" data-output="lf-years-display" data-suffix=" years">
+            </div>
+
+            <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:var(--r-sm);padding:var(--s3) var(--s4);margin-top:var(--s4)">
+              <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin-bottom:var(--s2)">If Invested Instead</div>
+              <div style="display:flex;justify-content:space-between">
+                <span style="font-size:.8rem;color:var(--text-secondary)">Portfolio Value</span>
+                <span style="font-family:var(--font-heading);font-size:1.3rem;font-weight:700;color:var(--green-400)" id="preview-monthly">—</span>
+              </div>
+            </div>
+            <button type="submit" class="btn btn--primary">Show Investment Growth</button>
+          </form>
+        </div>
+      </div>
+      <div id="results-container">
+        <div class="empty-state"><div class="empty-state__icon">☕</div><p>Enter a daily expense amount to see its 30-year investment opportunity cost.</p></div>
+      </div>
+    </div>
+
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item"><button class="faq-question">Is giving up coffee really the key to wealth? <span class="faq-icon">+</span></button><div class="faq-answer">The latte factor is a metaphor, not literal coffee advice. The real insight is about automating small regular investments — whether it's $5 or $500/month. The choice of what expense to cut is personal; the math works the same way. The key principle: automate regular investments early, let compounding work, and don't interrupt it.</div></div>
+      <div class="faq-item"><button class="faq-question">What's the best way to invest my latte savings? <span class="faq-icon">+</span></button><div class="faq-answer">Automate into low-cost index funds (Vanguard, Fidelity zero-fee funds). For tax efficiency in the US: max 401k first (especially if employer matches), then Roth IRA ($7,000 limit 2025), then taxable brokerage. Set up automatic monthly transfers so you never have to manually decide to invest. "Pay yourself first."</div></div>
+      <div class="faq-item"><button class="faq-question">How does this illustrate compound growth? <span class="faq-icon">+</span></button><div class="faq-answer">At 7% return, $150/month invested over 30 years grows to ~$183,000 — even though you only put in $54,000. The other $129,000 came from compound growth. This demonstrates why time horizon is the most powerful variable in investing — not the return rate, and not the initial amount. Starting 10 years earlier can double your final balance.</div></div>
+    </div>
+    <div class="related-section">
+      <h2>Related Calculators</h2>
+      <div class="related-grid">
+        <a href="/investment/compound-interest" class="related-card"><span class="related-card__icon">💰</span> Compound Interest</a>
+        <a href="/investment/fire"              class="related-card"><span class="related-card__icon">🔥</span> FIRE Calculator</a>
+        <a href="/specialized/rule-of-72"       class="related-card"><span class="related-card__icon">✖️</span> Rule of 72</a>
+        <a href="/debt/credit-card"             class="related-card"><span class="related-card__icon">💳</span> Credit Card Payoff</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

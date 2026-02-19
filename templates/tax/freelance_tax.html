@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block calculator_key %}freelanceTax{% endblock %}
+{% block title %}Freelance Tax Calculator 2025 — Self-Employment Tax US, UK &amp; India{% endblock %}
+{% block meta_description %}Calculate your self-employment tax, quarterly estimated payments, and take-home income as a freelancer. US SE tax 15.3%, UK NIC, India 44ADA. 2025 gig economy tax tool.{% endblock %}
+{% block canonical_path %}/tax/freelance{% endblock %}
+{% block json_ld %}
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"WebApplication","name":"Freelance Tax Estimator","url":"{{ site_url }}/tax/freelance","applicationCategory":"FinanceApplication","offers":{"@type":"Offer","price":"0"}},
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"How much self-employment tax do I owe in the US?","acceptedAnswer":{"@type":"Answer","text":"US self-employment tax is 15.3% on 92.35% of net profit (covering Social Security 12.4% and Medicare 2.9%). On $80,000 net profit, SE tax is approximately $11,304. You can deduct half the SE tax from income tax, saving roughly $1,800 in federal income tax."}},
+  {"@type":"Question","name":"When are quarterly estimated tax payments due?","acceptedAnswer":{"@type":"Answer","text":"US quarterly estimated tax due dates: April 15 (Q1), June 16 (Q2), September 15 (Q3), January 15 of the following year (Q4). Pay at least 90% of current year tax or 100% of prior year tax to avoid underpayment penalties."}},
+  {"@type":"Question","name":"What is Section 44ADA for Indian freelancers?","acceptedAnswer":{"@type":"Answer","text":"Section 44ADA is a presumptive taxation scheme for Indian professionals (IT, law, medicine, consulting) with gross receipts under ₹75 lakhs. Under 44ADA, 50% of gross receipts is deemed as profit — no books of accounts needed, and actual expenses exceeding 50% cannot be claimed."}}
+]}]
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/#cat-tax">Tax &amp; Salary</a></li><li aria-current="page">Freelance Tax</li></ol></nav>
+    <div class="page-header__inner">
+      <div class="page-header__icon">💻</div>
+      <div>
+        <div class="page-header__category">Taxation &amp; Salary</div>
+        <h1>Freelance Tax Estimator</h1>
+        <p class="page-header__desc">Calculate your self-employment tax, quarterly payments, and actual take-home income as a freelancer or self-employed professional.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="calc-page">
+  <div class="container">
+    <div class="calc-intro"><p>Freelancers and self-employed individuals face unique tax challenges: US freelancers pay the full 15.3% self-employment tax (both employer and employee FICA), plus federal and state income tax — all estimated quarterly. UK self-employed pay Class 2 and Class 4 National Insurance. Indian freelancers can use the simplified Section 44ADA presumptive taxation (50% of receipts = profit). This calculator accounts for all of these and generates your quarterly payment schedule with due dates.</p></div>
+
+    <div class="calc-layout">
+      <div>
+        <div class="calc-panel">
+          <div class="panel-title">💻 Freelance Income</div>
+          <form id="freelanceTax-form" novalidate>
+            <div class="form-group">
+              <label class="form-label">Country</label>
+              <div class="tab-group" id="fl-country-tabs">
+                <button type="button" class="tab is-active" data-country="US">🇺🇸 US</button>
+                <button type="button" class="tab" data-country="UK">🇬🇧 UK</button>
+                <button type="button" class="tab" data-country="IN">🇮🇳 India</button>
+              </div>
+              <input type="hidden" id="fl-country" name="country" value="US">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="fl-revenue">Gross Revenue / Turnover</label>
+              <div class="input-wrap"><span class="input-prefix" id="fl-currency">$</span>
+                <input type="number" class="form-input has-prefix" id="fl-revenue" name="gross_revenue" value="100000" min="1000" step="1000">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="fl-expenses">Business Expenses</label>
+              <div class="input-wrap"><span class="input-prefix" id="fl-exp-currency">$</span>
+                <input type="number" class="form-input has-prefix" id="fl-expenses" name="business_expenses" value="15000" min="0" step="1000">
+              </div>
+              <div class="form-hint">Home office, equipment, software, professional fees</div>
+            </div>
+            <div id="fl-us-options">
+              <div class="form-group">
+                <label class="form-label" for="fl-filing">Filing Status</label>
+                <select class="form-select" id="fl-filing" name="filing_status">
+                  <option value="single">Single</option>
+                  <option value="mfj">Married Filing Jointly</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="fl-state">State</label>
+                <select class="form-select" id="fl-state" name="state">
+                  <option value="TX">Texas (0%)</option>
+                  <option value="FL">Florida (0%)</option>
+                  <option value="WA">Washington (0%)</option>
+                  <option value="CA">California (~9.3%)</option>
+                  <option value="NY">New York (~6.85%)</option>
+                  <option value="other">Other (~5%)</option>
+                </select>
+              </div>
+            </div>
+            <div id="fl-india-options" class="hidden">
+              <div class="form-group">
+                <label class="form-label">Section 44ADA (Presumptive Taxation)</label>
+                <div class="tab-group">
+                  <button type="button" class="tab" data-presumptive="true" onclick="document.getElementById('fl-presumptive').value='true'">Use 44ADA</button>
+                  <button type="button" class="tab is-active" data-presumptive="false" onclick="document.getElementById('fl-presumptive').value='false'">Actual Expenses</button>
+                </div>
+                <input type="hidden" id="fl-presumptive" name="presumptive_scheme" value="false">
+                <div class="form-hint">44ADA: 50% of gross = profit, no expense records needed</div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn--primary">Calculate Freelance Tax</button>
+          </form>
+        </div>
+      </div>
+      <div id="results-container">
+        <div class="empty-state"><div class="empty-state__icon">💻</div><p>Enter your freelance income to calculate your tax liability and quarterly payment schedule.</p></div>
+      </div>
+    </div>
+
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item"><button class="faq-question">How is US self-employment tax calculated? <span class="faq-icon">+</span></button><div class="faq-answer">SE tax = 15.3% × (net profit × 0.9235). The 0.9235 factor represents the employee's share (as if you were an employee, the employer would pay half). On $85,000 net profit: $85,000 × 0.9235 × 0.153 = $12,000 SE tax. You deduct half ($6,000) from income tax, saving roughly $1,000–$2,000 in federal income tax.</div></div>
+      <div class="faq-item"><button class="faq-question">What business expenses can I deduct as a US freelancer? <span class="faq-icon">+</span></button><div class="faq-answer">Common deductible expenses: home office (dedicated space only), internet and phone (business %), computer/equipment, software subscriptions, professional development, health insurance premiums (if not eligible for employer plan), retirement contributions (SEP-IRA up to 25% of net), travel, and professional fees.</div></div>
+      <div class="faq-item"><button class="faq-question">What happens if I miss a quarterly estimated tax payment? <span class="faq-icon">+</span></button><div class="faq-answer">The IRS charges an underpayment penalty — currently the federal funds rate + 3%. To avoid penalties, pay at least 90% of current year tax liability or 100% of prior year tax (110% if prior year AGI exceeded $150,000). Use Form 2210 to calculate any penalty owed.</div></div>
+    </div>
+    <div class="related-section">
+      <h2>Related Calculators</h2>
+      <div class="related-grid">
+        <a href="/tax/take-home-pay"  class="related-card"><span class="related-card__icon">💼</span> Take-Home Pay</a>
+        <a href="/tax/capital-gains"  class="related-card"><span class="related-card__icon">📉</span> Capital Gains Tax</a>
+        <a href="/debt/personal-loan" class="related-card"><span class="related-card__icon">🏧</span> Personal Loan</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

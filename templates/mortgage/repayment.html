@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% block calculator_key %}mortgage{% endblock %}
+
+{% block title %}Mortgage Repayment Calculator — Monthly Payment & Amortization 2025{% endblock %}
+{% block meta_description %}Calculate your exact monthly mortgage payment, total interest, and full amortization schedule. US, UK, Germany, India, Singapore &amp; Japan rate presets. Free, instant results.{% endblock %}
+{% block canonical_path %}/mortgage/repayment{% endblock %}
+
+{% block json_ld %}
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"WebApplication","name":"Mortgage Repayment Calculator","url":"{{ site_url }}/mortgage/repayment","applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"How is a monthly mortgage payment calculated?","acceptedAnswer":{"@type":"Answer","text":"Using the formula M = P[r(1+r)^n]/[(1+r)^n-1], where P is the loan principal, r is the monthly interest rate (annual rate ÷ 12), and n is the total number of monthly payments."}},
+  {"@type":"Question","name":"What is a good mortgage interest rate in 2025?","acceptedAnswer":{"@type":"Answer","text":"In the US, 30-year fixed rates average around 6.7% and 15-year rates around 6.2% in 2025. UK rates are around 4.8%, German rates around 3.7%, and Indian home loan rates average 8.5–9%."}},
+  {"@type":"Question","name":"How much does a 1% rate difference cost over 30 years?","acceptedAnswer":{"@type":"Answer","text":"On a $400,000 loan, a 1% higher rate adds approximately $80,000–$90,000 in total interest over a 30-year term — roughly $230 more per month."}}
+]},
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+  {"@type":"ListItem","position":1,"name":"Home","item":"{{ site_url }}"},
+  {"@type":"ListItem","position":2,"name":"Mortgage Calculators","item":"{{ site_url }}/mortgage/repayment"},
+  {"@type":"ListItem","position":3,"name":"Repayment Calculator"}
+]}]
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <ol><li><a href="/">Home</a></li><li><a href="/#cat-mortgage">Mortgage</a></li><li aria-current="page">Repayment Calculator</li></ol>
+    </nav>
+    <div class="page-header__inner">
+      <div class="page-header__icon">🏠</div>
+      <div>
+        <div class="page-header__category">Mortgage &amp; Real Estate</div>
+        <h1>Mortgage Repayment Calculator</h1>
+        <p class="page-header__desc">Calculate your monthly mortgage payment, total interest cost, and full amortization schedule — with region-specific rate presets.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="calc-page">
+  <div class="container">
+
+    <div class="calc-intro">
+      <p>Use this free mortgage repayment calculator to find your exact monthly payment, total interest paid, and the full amortization breakdown over your loan term. Whether you're comparing a 15-year vs 30-year mortgage, evaluating variable vs fixed rates, or shopping across markets — our tool applies the standard annuity formula used by banks and mortgage brokers worldwide. Instantly see how much of each payment goes to principal versus interest, and how your equity builds over time. Supports rate presets for the US, UK, Germany, India, Singapore, and Japan.</p>
+    </div>
+
+    <div class="calc-layout">
+      <!-- ── Inputs ── -->
+      <div>
+        <div class="calc-panel">
+          <div class="panel-title">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            Loan Details
+          </div>
+          <form id="mortgage-form" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="region">Region / Country</label>
+              <select class="form-select" id="region" name="region">
+                <option value="US">🇺🇸 United States (6.7% / 6.2%)</option>
+                <option value="UK">🇬🇧 United Kingdom (4.8%)</option>
+                <option value="DE">🇩🇪 Germany (3.7%)</option>
+                <option value="IN">🇮🇳 India (9.0%)</option>
+                <option value="SG">🇸🇬 Singapore (3.8%)</option>
+                <option value="JP">🇯🇵 Japan (1.0%)</option>
+                <option value="custom">Custom Rate</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="principal">
+                Home Loan Amount
+                <span class="form-label-hint" id="preview-label-currency">USD</span>
+              </label>
+              <div class="input-wrap">
+                <span class="input-prefix" id="currency-symbol">$</span>
+                <input type="number" class="form-input has-prefix" id="principal" name="principal" value="400000" min="1000" max="100000000" step="1000">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="down_payment">Down Payment</label>
+              <div class="input-wrap">
+                <span class="input-prefix" id="dp-symbol">$</span>
+                <input type="number" class="form-input has-prefix has-suffix" id="down_payment" name="down_payment" value="80000" min="0" step="1000">
+                <span class="input-suffix" id="dp-pct-display">20%</span>
+              </div>
+              <div class="form-hint">Loan amount = Home price − Down payment</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="annual_rate">
+                Annual Interest Rate
+                <span class="form-label-hint" id="rate-badge"><span class="badge badge--green">2025 Rate</span></span>
+              </label>
+              <div class="input-wrap">
+                <input type="number" class="form-input has-suffix" id="annual_rate" name="annual_rate" value="6.7" min="0.01" max="30" step="0.05">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="term_years">
+                Loan Term
+                <span class="form-label-hint" id="term-display">30 years</span>
+              </label>
+              <input type="range" class="form-range" id="term_years" name="term_years" value="30" min="5" max="40" step="5" data-output="term-display" data-suffix=" years">
+              <div style="display:flex;justify-content:space-between;font-size:.72rem;color:var(--text-muted);margin-top:4px">
+                <span>5 yr</span><span>10</span><span>15</span><span>20</span><span>25</span><span>30</span><span>40 yr</span>
+              </div>
+            </div>
+
+            <!-- Preview numbers (instant JS) -->
+            <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:var(--r-sm);padding:var(--s3) var(--s4);margin-top:var(--s4)" id="preview-panel">
+              <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin-bottom:var(--s2)">Live Preview</div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-size:.8rem;color:var(--text-secondary)">Monthly Payment</span>
+                <span style="font-family:var(--font-heading);font-size:1.3rem;font-weight:700;color:var(--green-400)" id="preview-monthly">—</span>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn--primary">
+              Calculate Full Breakdown
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- ── Results ── -->
+      <div id="results-container">
+        <div class="empty-state">
+          <div class="empty-state__icon">📊</div>
+          <p>Enter your loan details and click <strong>Calculate</strong> to see your amortization schedule and breakdown.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── How It Works ── -->
+    <div class="how-it-works">
+      <h2>How Mortgage Repayment Is Calculated</h2>
+      <p>The monthly mortgage payment (M) is calculated using the standard annuity formula:</p>
+      <div class="formula-box">M = P × [ r(1+r)ⁿ ] / [ (1+r)ⁿ − 1 ]</div>
+      <p>Where: <strong>P</strong> = loan principal, <strong>r</strong> = monthly interest rate (annual rate ÷ 12 ÷ 100), <strong>n</strong> = total monthly payments (years × 12). Each payment covers interest accrued that month plus a portion of principal. As the balance decreases, the interest portion shrinks and the principal portion grows — this is the amortization process.</p>
+    </div>
+
+    <!-- ── FAQ ── -->
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item">
+        <button class="faq-question">How is a monthly mortgage payment calculated? <span class="faq-icon">+</span></button>
+        <div class="faq-answer">Your monthly payment is calculated using the annuity formula: M = P[r(1+r)^n]/[(1+r)^n-1]. P is the loan principal, r is the monthly rate (annual rate ÷ 12), and n is the number of payments. Early payments are mostly interest; later payments are mostly principal.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">What is the current US mortgage rate in 2025? <span class="faq-icon">+</span></button>
+        <div class="faq-answer">As of 2025, the US 30-year fixed mortgage rate averages approximately 6.7% and the 15-year fixed rate averages 6.2%, according to Freddie Mac's Primary Mortgage Market Survey. Rates fluctuate weekly based on Treasury bond yields and Fed policy.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">Should I choose a 15-year or 30-year mortgage? <span class="faq-icon">+</span></button>
+        <div class="faq-answer">A 15-year mortgage has higher monthly payments but saves significantly on total interest (often 50–60% less). A 30-year mortgage offers lower payments and more cash flow flexibility. If you can comfortably afford the 15-year payment, you'll pay off the home faster and save tens of thousands in interest.</div>
+      </div>
+    </div>
+
+    <!-- ── Related ── -->
+    <div class="related-section">
+      <h2>Related Calculators</h2>
+      <div class="related-grid">
+        <a href="/mortgage/refinance"     class="related-card"><span class="related-card__icon">🔄</span> Mortgage Refinance</a>
+        <a href="/mortgage/affordability" class="related-card"><span class="related-card__icon">🏡</span> Home Affordability</a>
+        <a href="/mortgage/rent-vs-buy"   class="related-card"><span class="related-card__icon">⚖️</span> Rent vs Buy</a>
+        <a href="/investment/compound-interest" class="related-card"><span class="related-card__icon">💰</span> Compound Interest</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
