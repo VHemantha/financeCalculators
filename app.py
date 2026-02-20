@@ -45,6 +45,12 @@ def create_app():
         content = f"User-agent: *\nAllow: /\nSitemap: {SITE_URL}/sitemap.xml\n"
         return Response(content, mimetype="text/plain")
 
+    # ── ads.txt ────────────────────────────────────────────────────────────
+    @app.route("/ads.txt")
+    def ads():
+        content = "google.com, pub-9172775909086222, DIRECT, f08c47fec0942fa0\n"
+        return Response(content, mimetype="text/plain")
+
     # ── Global template context ────────────────────────────────────────────
     @app.context_processor
     def inject_globals():
