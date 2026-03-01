@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}Financial Independence Blog — Tips, Guides & Strategies | FinWise{% endblock %}
+
+{% block meta_description %}Read expert guides on student financial independence, budgeting, investing, and debt management. Free educational articles from FinWise.{% endblock %}
+
+{% block canonical_path %}/blog{% endblock %}
+
+{% block extra_head %}
+<meta name="keywords" content="how to become financially independent as a student, student financial independence, financial freedom for students, how students can achieve financial independence, student budgeting tips, investing as a student, financial independence tips for college students, how to be financially independent in college, student loan management, side hustle for students, FIRE for students, compound interest for students, personal finance for students, money management for students">
+<style>
+  .blog-hero {
+    background: linear-gradient(135deg, #0f3d22 0%, #1a6b3a 60%, #2d9a56 100%);
+    color: #fff;
+    padding: 64px 24px 56px;
+    text-align: center;
+  }
+  .blog-hero h1 {
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 700;
+    margin-bottom: 14px;
+    letter-spacing: -0.5px;
+  }
+  .blog-hero p {
+    font-size: 17px;
+    opacity: 0.85;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  .blog-grid-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 56px 24px 80px;
+  }
+
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 28px;
+  }
+
+  .blog-card {
+    background: #fff;
+    border: 1px solid var(--border, #e5e7eb);
+    border-radius: 14px;
+    padding: 28px 26px 24px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .blog-card:hover {
+    box-shadow: 0 8px 28px rgba(26,107,58,0.14);
+    transform: translateY(-3px);
+  }
+
+  .blog-card__tag {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #1a6b3a;
+    background: #e8f5ee;
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    width: fit-content;
+  }
+
+  .blog-card__title {
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: #1a1a1a;
+  }
+
+  .blog-card__desc {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.65;
+    flex: 1;
+  }
+
+  .blog-card__cta {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a6b3a;
+    margin-top: 4px;
+  }
+
+  .blog-empty {
+    text-align: center;
+    padding: 80px 24px;
+    color: #888;
+    font-size: 16px;
+  }
+
+  @media (max-width: 600px) {
+    .blog-grid { grid-template-columns: 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="blog-hero">
+  <h1>FinWise Financial Blog</h1>
+  <p>Actionable guides on financial independence, budgeting, investing, and more.</p>
+</div>
+
+<div class="blog-grid-wrap">
+  {% if posts %}
+    <div class="blog-grid">
+      {% for post in posts %}
+        <a class="blog-card" href="/blog/{{ post.slug }}">
+          <span class="blog-card__tag">Guide</span>
+          <div class="blog-card__title">{{ post.title }}</div>
+          {% if post.description %}
+            <div class="blog-card__desc">{{ post.description[:160] }}{% if post.description|length > 160 %}…{% endif %}</div>
+          {% endif %}
+          <div class="blog-card__cta">Read article →</div>
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="blog-empty">No articles yet. Check back soon!</div>
+  {% endif %}
+</div>
+
+{% endblock %}

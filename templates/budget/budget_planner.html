@@ -1,0 +1,955 @@
+{% extends "base.html" %}
+{% block calculator_key %}budgetPlanner{% endblock %}
+{% block title %}Budget Planner Calculator 2025 — 50/30/20, Zero-Based, Envelope & More | FinWise{% endblock %}
+{% block meta_description %}Comprehensive free budget planner. Enter income and all expenses, then compare 6 budgeting methods: 50/30/20, Zero-Based, 80/20, Envelope, 60% Solution, and Reverse Budget. Includes savings rate, DTI, and FIRE analysis.{% endblock %}
+{% block canonical_path %}/budget{% endblock %}
+
+{% block json_ld %}
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"WebApplication","name":"Budget Planner Calculator","url":"{{ site_url }}/budget","applicationCategory":"FinanceApplication","offers":{"@type":"Offer","price":"0"}},
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"What is the 50/30/20 budget rule?","acceptedAnswer":{"@type":"Answer","text":"The 50/30/20 rule divides after-tax income into three buckets: 50% for needs (rent, utilities, groceries, minimum debt payments), 30% for wants (dining, entertainment, hobbies), and 20% for savings and investments. It is one of the most popular personal finance frameworks for balancing lifestyle and wealth building."}},
+  {"@type":"Question","name":"What is zero-based budgeting?","acceptedAnswer":{"@type":"Answer","text":"Zero-based budgeting (ZBB) means assigning every dollar of income a specific purpose so that income minus all allocations equals zero. Every expense, savings goal, and debt payment is explicitly planned, giving you total control and awareness of your cash flow."}},
+  {"@type":"Question","name":"What is the envelope budgeting method?","acceptedAnswer":{"@type":"Answer","text":"The envelope method involves dividing cash (or digital equivalents) into separate envelopes for each spending category — groceries, entertainment, transport, etc. When an envelope is empty, you stop spending in that category. It is highly effective for preventing overspending."}}
+]}]
+</script>
+{% endblock %}
+
+{% block extra_head %}
+<style>
+/* ── Budget Planner specific styles ── */
+.budget-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: var(--s5);
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 0;
+}
+.budget-tab {
+  padding: 8px 16px;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: color .15s, border-color .15s;
+  font-family: inherit;
+}
+.budget-tab.active, .budget-tab:hover {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+.budget-section { display: none; }
+.budget-section.active { display: block; }
+
+.expense-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s3);
+}
+@media (max-width: 640px) { .expense-grid { grid-template-columns: 1fr; } }
+
+.expense-group {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+}
+.expense-group__header {
+  background: var(--primary-light);
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.expense-group__body { padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+.expense-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.expense-row label {
+  flex: 1;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.expense-row .input-wrap {
+  width: 110px;
+  flex-shrink: 0;
+}
+.expense-row .input-wrap input {
+  font-size: 13px;
+  padding: 5px 8px 5px 24px;
+}
+
+/* Method cards */
+.method-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--s4);
+  margin-top: var(--s4);
+}
+.method-card {
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: var(--s4);
+  position: relative;
+}
+.method-card__name {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.method-card__desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: var(--s3);
+  line-height: 1.5;
+}
+.method-bar-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: var(--s3);
+}
+.method-bar-item { display: flex; flex-direction: column; gap: 2px; }
+.method-bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: var(--text-secondary);
+}
+.method-bar-track {
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.method-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width .4s ease;
+}
+.fill-need    { background: #3b82f6; }
+.fill-want    { background: #f59e0b; }
+.fill-saving  { background: #10b981; }
+.fill-debt    { background: #ef4444; }
+.fill-other   { background: #8b5cf6; }
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+.status-badge.on_track  { background: #d1fae5; color: #065f46; }
+.status-badge.over      { background: #fee2e2; color: #991b1b; }
+.status-badge.under     { background: #fef3c7; color: #92400e; }
+.status-badge.surplus   { background: #d1fae5; color: #065f46; }
+.status-badge.deficit   { background: #fee2e2; color: #991b1b; }
+.status-badge.balanced  { background: #e0f2fe; color: #0369a1; }
+
+.health-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--s3);
+  margin-top: var(--s4);
+}
+.health-card {
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: var(--s3) var(--s4);
+  text-align: center;
+}
+.health-card__value {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.health-card__label {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+.health-card.excellent .health-card__value { color: #059669; }
+.health-card.good      .health-card__value { color: #10b981; }
+.health-card.fair      .health-card__value { color: #f59e0b; }
+.health-card.caution   .health-card__value { color: #f59e0b; }
+.health-card.low       .health-card__value { color: #ef4444; }
+.health-card.high      .health-card__value { color: #ef4444; }
+.health-card.surplus   .health-card__value { color: #059669; }
+.health-card.deficit   .health-card__value { color: #ef4444; }
+.health-card.balanced  .health-card__value { color: #3b82f6; }
+
+.envelope-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--s2);
+}
+.envelope-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 8px 12px;
+  font-size: 13px;
+}
+.envelope-item__name { color: var(--text-secondary); }
+.envelope-item__amount { font-weight: 700; color: var(--text-primary); }
+
+.step-flow { display: flex; flex-direction: column; gap: var(--s2); margin-top: var(--s3); }
+.step-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--s3) var(--s4);
+  border-radius: var(--r-sm);
+  font-size: 14px;
+}
+.step-item.income   { background: #d1fae5; }
+.step-item.subtract { background: #fef3c7; }
+.step-item.result   { background: var(--primary-light); font-weight: 700; }
+.step-item.result-pos { background: #d1fae5; font-weight: 700; }
+.step-item.result-neg { background: #fee2e2; font-weight: 700; }
+
+.breakdown-row {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.breakdown-row:last-child { border: none; }
+.breakdown-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.breakdown-label { flex: 1; color: var(--text-secondary); }
+.breakdown-amount { font-weight: 600; color: var(--text-primary); }
+.breakdown-pct    { color: var(--text-muted); font-size: 11px; min-width: 40px; text-align: right; }
+
+.summary-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--s3);
+  margin-bottom: var(--s5);
+}
+.summary-card {
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: var(--s3) var(--s4);
+  text-align: center;
+}
+.summary-card__val { font-size: 22px; font-weight: 700; color: var(--primary); }
+.summary-card__lbl { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+.zbb-bar {
+  height: 20px;
+  display: flex;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: var(--s3) 0;
+}
+.zbb-segment { height: 100%; transition: width .4s; }
+
+#budget-results { display: none; }
+#budget-results.visible { display: block; }
+
+.method-selector {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: var(--s4) 0 var(--s3);
+}
+.method-btn {
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: none;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-family: inherit;
+  transition: all .15s;
+}
+.method-btn.active, .method-btn:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+.method-detail { display: none; }
+.method-detail.active { display: block; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li aria-current="page">Budget Planner</li>
+      </ol>
+    </nav>
+    <div class="page-header__inner">
+      <div class="page-header__icon">📊</div>
+      <div>
+        <div class="page-header__category">Budget Planning</div>
+        <h1>Comprehensive Budget Planner</h1>
+        <p class="page-header__desc">Enter your income and every expense, then instantly see your budget analysed across 6 planning methods — 50/30/20, Zero-Based, 80/20, Envelope, 60% Solution, and Reverse Budget. Includes savings rate, debt-to-income, and FIRE projections.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="calc-page">
+  <div class="container">
+
+    <div class="calc-intro">
+      <p>Fill in your monthly after-tax income and all your monthly expenses below. You don't need to fill every field — enter what applies to you. Hit <strong>Calculate</strong> to see your personalised budget analysis across all six popular budgeting methods.</p>
+    </div>
+
+    <div class="calc-layout" style="grid-template-columns: 1fr">
+      <form id="budget-form" novalidate>
+
+        <!-- ═══ INCOME ════════════════════════════════════════════════════════ -->
+        <div class="calc-panel" style="margin-bottom: var(--s4)">
+          <div class="panel-title">💰 Monthly After-Tax Income</div>
+          <div class="expense-grid">
+            <div class="expense-group">
+              <div class="expense-group__header">💼 Employment</div>
+              <div class="expense-group__body">
+                <div class="expense-row">
+                  <label for="inc_primary">Primary Salary / Wages</label>
+                  <div class="input-wrap"><span class="input-prefix">$</span><input type="number" class="form-input has-prefix" id="inc_primary" name="inc_primary" value="" min="0" step="50" placeholder="0"></div>
+                </div>
+                <div class="expense-row">
+                  <label for="inc_secondary">Secondary / Part-time Job</label>
+                  <div class="input-wrap"><span class="input-prefix">$</span><input type="number" class="form-input has-prefix" id="inc_secondary" name="inc_secondary" value="" min="0" step="50" placeholder="0"></div>
+                </div>
+                <div class="expense-row">
+                  <label for="inc_freelance">Freelance / Self-employed</label>
+                  <div class="input-wrap"><span class="input-prefix">$</span><input type="number" class="form-input has-prefix" id="inc_freelance" name="inc_freelance" value="" min="0" step="50" placeholder="0"></div>
+                </div>
+              </div>
+            </div>
+            <div class="expense-group">
+              <div class="expense-group__header">📈 Passive & Other</div>
+              <div class="expense-group__body">
+                <div class="expense-row">
+                  <label for="inc_rental">Rental Income</label>
+                  <div class="input-wrap"><span class="input-prefix">$</span><input type="number" class="form-input has-prefix" id="inc_rental" name="inc_rental" value="" min="0" step="50" placeholder="0"></div>
+                </div>
+                <div class="expense-row">
+                  <label for="inc_dividends">Dividends / Interest</label>
+                  <div class="input-wrap"><span class="input-prefix">$</span><input type="number" class="form-input has-prefix" id="inc_dividends" name="inc_dividends" value="" min="0" step="10" placeholder="0"></div>
+                </div>
+                <div class="expense-row">
+                  <label for="inc_government">Government Benefits</label>
+                  <div class="input-wrap"><span class="input-prefix">$</span><input type="number" class="form-input has-prefix" id="inc_government" name="inc_government" value="" min="0" step="10" placeholder="0"></div>
+                </div>
+                <div class="expense-row">
+                  <label for="inc_other">Other Income</label>
+                  <div class="input-wrap"><span class="input-prefix">$</span><input type="number" class="form-input has-prefix" id="inc_other" name="inc_other" value="" min="0" step="10" placeholder="0"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:var(--s3);padding:var(--s3) var(--s4);background:var(--primary-light);border-radius:var(--r-sm);display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:14px;font-weight:600;color:var(--primary)">Total Monthly Income</span>
+            <span style="font-size:20px;font-weight:700;color:var(--primary)" id="income-total-display">$0</span>
+          </div>
+        </div>
+
+        <!-- ═══ EXPENSES ══════════════════════════════════════════════════════ -->
+        <div class="calc-panel" style="margin-bottom:var(--s4)">
+          <div class="panel-title">📋 Monthly Expenses</div>
+
+          <!-- Tabs -->
+          <div class="budget-tabs" id="expense-tabs">
+            <button type="button" class="budget-tab active" data-section="housing">🏠 Housing</button>
+            <button type="button" class="budget-tab" data-section="transport">🚗 Transport</button>
+            <button type="button" class="budget-tab" data-section="food">🛒 Food</button>
+            <button type="button" class="budget-tab" data-section="health">❤️ Health</button>
+            <button type="button" class="budget-tab" data-section="debt">💳 Debt</button>
+            <button type="button" class="budget-tab" data-section="savings">💰 Savings</button>
+            <button type="button" class="budget-tab" data-section="lifestyle">🎭 Lifestyle</button>
+            <button type="button" class="budget-tab" data-section="family">👨‍👩‍👧 Family</button>
+          </div>
+
+          <!-- Housing -->
+          <div class="budget-section active" id="section-housing">
+            <div class="expense-grid">
+              <div class="expense-group">
+                <div class="expense-group__header">🏠 Housing</div>
+                <div class="expense-group__body">
+                  {% for key, (label, bucket) in expense_meta.items() if key.startswith('housing_') %}
+                  <div class="expense-row">
+                    <label for="{{ key }}">{{ label }}</label>
+                    <div class="input-wrap"><span class="input-prefix">$</span><input type="number" class="form-input has-prefix expense-input" id="{{ key }}" name="{{ key }}" value="" min="0" step="10" placeholder="0" data-bucket="{{ bucket }}"></div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="expense-group">
+                <div class="expense-group__header">💡 Utilities</div>
+                <div class="expense-group__body">
+                  {% for key, (label, bucket) in expense_meta.items() if key.startswith('util_') %}
+                  <div class="expense-row">
+                    <label for="{{ key }}">{{ label }}</label>
+                    <div class="input-wrap"><span class="input-prefix">$</span><input type="number" class="form-input has-prefix expense-input" id="{{ key }}" name="{{ key }}" value="" min="0" step="5" placeholder="0" data-bucket="{{ bucket }}"></div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Transport -->
+          <div class="budget-section" id="section-transport">
+            <div class="expense-group" style="max-width:480px">
+              <div class="expense-group__header">🚗 Transportation</div>
+              <div class="expense-group__body">
+                {% for key, (label, bucket) in expense_meta.items() if key.startswith('trans_') %}
+                <div class="expense-row">
+                  <label for="{{ key }}">{{ label }}</label>
+                  <div class="input-wrap"><span class="input-prefix">$</span><input type="number" class="form-input has-prefix expense-input" id="{{ key }}" name="{{ key }}" value="" min="0" step="5" placeholder="0" data-bucket="{{ bucket }}"></div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+
+          <!-- Food -->
+          <div class="budget-section" id="section-food">
+            <div class="expense-group" style="max-width:480px">
+              <div class="expense-group__header">🛒 Food & Dining</div>
+              <div class="expense-group__body">
+                {% for key, (label, bucket) in expense_meta.items() if key.startswith('food_') %}
+                <div class="expense-row">
+                  <label for="{{ key }}">{{ label }}</label>
+                  <div class="input-wrap"><span class="input-prefix">$</span><input type="number" class="form-input has-prefix expense-input" id="{{ key }}" name="{{ key }}" value="" min="0" step="5" placeholder="0" data-bucket="{{ bucket }}"></div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+
+          <!-- Health -->
+          <div class="budget-section" id="section-health">
+            <div class="expense-grid">
+              <div class="expense-group">
+                <div class="expense-group__header">❤️ Healthcare</div>
+                <div class="expense-group__body">
+                  {% for key, (label, bucket) in expense_meta.items() if key.startswith('health_') %}
+                  <div class="expense-row">
+                    <label for="{{ key }}">{{ label }}</label>
+                    <div class="input-wrap"><span class="input-prefix">$</span><input type="number" class="form-input has-prefix expense-input" id="{{ key }}" name="{{ key }}" value="" min="0" step="5" placeholder="0" data-bucket="{{ bucket }}"></div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="expense-group">
+                <div class="expense-group__header">🛡️ Insurance</div>
+                <div class="expense-group__body">
+                  {% for key, (label, bucket) in expense_meta.items() if key.startswith('ins_') %}
+                  <div class="expense-row">
+                    <label for="{{ key }}">{{ label }}</label>
+                    <div class="input-wrap"><span class="input-prefix">$</span><input type="number" class="form-input has-prefix expense-input" id="{{ key }}" name="{{ key }}" value="" min="0" step="5" placeholder="0" data-bucket="{{ bucket }}"></div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Debt -->
+          <div class="budget-section" id="section-debt">
+            <div class="expense-group" style="max-width:480px">
+              <div class="expense-group__header">💳 Debt Repayments</div>
+              <div class="expense-group__body">
+                {% for key, (label, bucket) in expense_meta.items() if key.startswith('debt_') %}
+                <div class="expense-row">
+                  <label for="{{ key }}">{{ label }}</label>
+                  <div class="input-wrap"><span class="input-prefix">$</span><input type="number" class="form-input has-prefix expense-input" id="{{ key }}" name="{{ key }}" value="" min="0" step="10" placeholder="0" data-bucket="{{ bucket }}"></div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+
+          <!-- Savings -->
+          <div class="budget-section" id="section-savings">
+            <div class="expense-group" style="max-width:480px">
+              <div class="expense-group__header">💰 Savings & Investments</div>
+              <div class="expense-group__body">
+                {% for key, (label, bucket) in expense_meta.items() if key.startswith('sav_') %}
+                <div class="expense-row">
+                  <label for="{{ key }}">{{ label }}</label>
+                  <div class="input-wrap"><span class="input-prefix">$</span><input type="number" class="form-input has-prefix expense-input" id="{{ key }}" name="{{ key }}" value="" min="0" step="10" placeholder="0" data-bucket="{{ bucket }}"></div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+
+          <!-- Lifestyle -->
+          <div class="budget-section" id="section-lifestyle">
+            <div class="expense-grid">
+              <div class="expense-group">
+                <div class="expense-group__header">🎭 Entertainment</div>
+                <div class="expense-group__body">
+                  {% for key, (label, bucket) in expense_meta.items() if key.startswith('ent_') %}
+                  <div class="expense-row">
+                    <label for="{{ key }}">{{ label }}</label>
+                    <div class="input-wrap"><span class="input-prefix">$</span><input type="number" class="form-input has-prefix expense-input" id="{{ key }}" name="{{ key }}" value="" min="0" step="5" placeholder="0" data-bucket="{{ bucket }}"></div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="expense-group">
+                <div class="expense-group__header">👗 Personal & Giving</div>
+                <div class="expense-group__body">
+                  {% for key, (label, bucket) in expense_meta.items() if key.startswith('pers_') or key.startswith('give_') or key.startswith('edu_') or key == 'other_misc' %}
+                  <div class="expense-row">
+                    <label for="{{ key }}">{{ label }}</label>
+                    <div class="input-wrap"><span class="input-prefix">$</span><input type="number" class="form-input has-prefix expense-input" id="{{ key }}" name="{{ key }}" value="" min="0" step="5" placeholder="0" data-bucket="{{ bucket }}"></div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Family -->
+          <div class="budget-section" id="section-family">
+            <div class="expense-group" style="max-width:480px">
+              <div class="expense-group__header">👨‍👩‍👧 Family & Children</div>
+              <div class="expense-group__body">
+                {% for key, (label, bucket) in expense_meta.items() if key.startswith('fam_') %}
+                <div class="expense-row">
+                  <label for="{{ key }}">{{ label }}</label>
+                  <div class="input-wrap"><span class="input-prefix">$</span><input type="number" class="form-input has-prefix expense-input" id="{{ key }}" name="{{ key }}" value="" min="0" step="10" placeholder="0" data-bucket="{{ bucket }}"></div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+
+          <!-- Live expense total -->
+          <div style="margin-top:var(--s4);padding:var(--s3) var(--s4);background:var(--bg-input);border:1px solid var(--border);border-radius:var(--r-sm);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+              <span style="font-size:13px;color:var(--text-muted)">Total Monthly Expenses</span>
+              <span style="font-size:18px;font-weight:700;color:var(--text-primary)" id="expense-total-display">$0</span>
+            </div>
+            <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--text-muted)">
+              <span>Needs: <strong id="bucket-need-display" style="color:#3b82f6">$0</strong></span>
+              <span>Wants: <strong id="bucket-want-display" style="color:#f59e0b">$0</strong></span>
+              <span>Savings: <strong id="bucket-saving-display" style="color:#10b981">$0</strong></span>
+              <span>Debt: <strong id="bucket-debt-display" style="color:#ef4444">$0</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn--primary btn--lg" style="width:100%">
+          Calculate My Budget →
+        </button>
+      </form>
+
+      <!-- ═══ RESULTS ═══════════════════════════════════════════════════════════ -->
+      <div id="budget-results">
+
+        <!-- Summary strip -->
+        <div class="calc-panel" style="margin-top:var(--s5)">
+          <div class="panel-title">📊 Budget Summary</div>
+          <div class="summary-strip" id="summary-strip"></div>
+
+          <!-- Full-width stacked bar -->
+          <div style="margin-bottom:var(--s2)">
+            <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:4px">
+              <span>Income allocation</span>
+              <span id="bar-pct-label"></span>
+            </div>
+            <div class="zbb-bar" id="income-bar" style="height:18px;border-radius:4px;overflow:hidden;background:var(--border)"></div>
+            <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:6px;font-size:11px;color:var(--text-muted)">
+              <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#3b82f6;margin-right:4px"></span>Needs</span>
+              <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#f59e0b;margin-right:4px"></span>Wants</span>
+              <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#10b981;margin-right:4px"></span>Savings</span>
+              <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#ef4444;margin-right:4px"></span>Debt</span>
+              <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#e5e7eb;margin-right:4px"></span>Unallocated</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Financial health -->
+        <div class="calc-panel" style="margin-top:var(--s4)">
+          <div class="panel-title">❤️ Financial Health Indicators</div>
+          <div class="health-grid" id="health-grid"></div>
+        </div>
+
+        <!-- Budget method analysis -->
+        <div class="calc-panel" style="margin-top:var(--s4)">
+          <div class="panel-title">📐 Budget Method Analysis</div>
+          <p style="font-size:13px;color:var(--text-muted);margin-bottom:var(--s3)">Select a method to see your detailed analysis:</p>
+          <div class="method-selector" id="method-selector"></div>
+          <div id="method-detail-container"></div>
+        </div>
+
+        <!-- Expense breakdown -->
+        <div class="calc-panel" style="margin-top:var(--s4)">
+          <div class="panel-title">🗂️ Full Expense Breakdown</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s4)" id="breakdown-cols">
+            <div>
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:var(--s2)">By Amount</div>
+              <div id="breakdown-list"></div>
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:var(--s2)">By Bucket</div>
+              <div id="bucket-breakdown"></div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /results -->
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+(function () {
+  'use strict';
+
+  const $ = id => document.getElementById(id);
+  const fmt = n => '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  const fmtD = n => '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const pct = n => Number(n).toFixed(1) + '%';
+
+  const BUCKET_COLORS = { need: '#3b82f6', want: '#f59e0b', saving: '#10b981', debt: '#ef4444' };
+  const BUCKET_LABELS = { need: 'Need', want: 'Want', saving: 'Saving', debt: 'Debt' };
+
+  // ── Live income total ──────────────────────────────────────────────────────
+  const incomeInputs = document.querySelectorAll('[id^="inc_"]');
+  function updateIncomeTotals() {
+    let total = 0;
+    incomeInputs.forEach(el => { total += parseFloat(el.value) || 0; });
+    $('income-total-display').textContent = fmt(total);
+  }
+  incomeInputs.forEach(el => el.addEventListener('input', updateIncomeTotals));
+
+  // ── Live expense totals ────────────────────────────────────────────────────
+  const expenseInputs = document.querySelectorAll('.expense-input');
+  function updateExpenseTotals() {
+    let total = 0;
+    const buckets = { need: 0, want: 0, saving: 0, debt: 0 };
+    expenseInputs.forEach(el => {
+      const v = parseFloat(el.value) || 0;
+      total += v;
+      const b = el.dataset.bucket;
+      if (b) buckets[b] = (buckets[b] || 0) + v;
+    });
+    $('expense-total-display').textContent = fmt(total);
+    $('bucket-need-display').textContent   = fmt(buckets.need);
+    $('bucket-want-display').textContent   = fmt(buckets.want);
+    $('bucket-saving-display').textContent = fmt(buckets.saving);
+    $('bucket-debt-display').textContent   = fmt(buckets.debt);
+  }
+  expenseInputs.forEach(el => el.addEventListener('input', updateExpenseTotals));
+
+  // ── Expense tabs ───────────────────────────────────────────────────────────
+  document.querySelectorAll('.budget-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.budget-tab').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.budget-section').forEach(s => s.classList.remove('active'));
+      btn.classList.add('active');
+      const sec = $('section-' + btn.dataset.section);
+      if (sec) sec.classList.add('active');
+    });
+  });
+
+  // ── Form submit ────────────────────────────────────────────────────────────
+  const form = $('budget-form');
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const payload = {};
+    new FormData(form).forEach((val, key) => {
+      payload[key] = parseFloat(val) || 0;
+    });
+    try {
+      const res  = await fetch('/api/budget', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      const json = await res.json();
+      if (!json.ok) { alert(json.error || 'Error'); return; }
+      renderResults(json.data);
+    } catch (err) {
+      alert('Network error: ' + err.message);
+    }
+  });
+
+  // ── Render ─────────────────────────────────────────────────────────────────
+  function renderResults(d) {
+    const results = $('budget-results');
+    results.classList.add('visible');
+    results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    renderSummary(d);
+    renderBar(d);
+    renderHealth(d.health);
+    renderMethods(d.methods, d.income.total);
+    renderBreakdown(d);
+  }
+
+  function renderSummary(d) {
+    const inc = d.income.total, exp = d.expenses.total, surplus = d.monthly_surplus;
+    const cards = [
+      { val: fmt(inc),     lbl: 'Monthly Income' },
+      { val: fmt(exp),     lbl: 'Monthly Expenses' },
+      { val: fmtD(Math.abs(surplus)), lbl: surplus >= 0 ? 'Monthly Surplus' : 'Monthly Deficit', cls: surplus >= 0 ? 'color:#059669' : 'color:#dc2626' },
+      { val: fmt(d.annual_surplus >= 0 ? d.annual_surplus : -d.annual_surplus), lbl: d.annual_surplus >= 0 ? 'Annual Surplus' : 'Annual Deficit', cls: d.annual_surplus >= 0 ? 'color:#059669' : 'color:#dc2626' },
+    ];
+    $('summary-strip').innerHTML = cards.map(c =>
+      `<div class="summary-card"><div class="summary-card__val" style="${c.cls||''}">${c.val}</div><div class="summary-card__lbl">${c.lbl}</div></div>`
+    ).join('');
+  }
+
+  function renderBar(d) {
+    const inc = d.income.total;
+    const exp = d.expenses;
+    const segments = [
+      { key: 'need',   val: exp.needs,   color: '#3b82f6' },
+      { key: 'want',   val: exp.wants,   color: '#f59e0b' },
+      { key: 'saving', val: exp.savings, color: '#10b981' },
+      { key: 'debt',   val: exp.debt,    color: '#ef4444' },
+    ];
+    const used = exp.total, remaining = Math.max(inc - used, 0);
+    let html = segments.map(s => {
+      const w = inc > 0 ? Math.min(s.val / inc * 100, 100) : 0;
+      return `<div class="zbb-segment" style="width:${w}%;background:${s.color}" title="${BUCKET_LABELS[s.key]}: ${fmt(s.val)} (${pct(w)})"></div>`;
+    }).join('');
+    if (remaining > 0 && inc > 0) {
+      const w = remaining / inc * 100;
+      html += `<div class="zbb-segment" style="width:${w}%;background:#e5e7eb" title="Unallocated: ${fmt(remaining)}"></div>`;
+    }
+    $('income-bar').innerHTML = html;
+    $('bar-pct-label').textContent = inc > 0 ? pct(exp.total / inc * 100) + ' of income allocated' : '';
+  }
+
+  function renderHealth(h) {
+    const cards = [
+      { val: h.savings_rate_pct + '%', lbl: 'Savings Rate', cls: h.savings_rate_status, tip: 'Target: ≥20%' },
+      { val: h.housing_ratio_pct + '%', lbl: 'Housing Ratio', cls: h.housing_ratio_status, tip: 'Target: ≤28%' },
+      { val: h.debt_to_income_pct + '%', lbl: 'Debt-to-Income', cls: h.dti_status, tip: 'Target: ≤36%' },
+      { val: fmt(h.monthly_surplus), lbl: h.surplus_status === 'deficit' ? 'Monthly Deficit' : 'Monthly Surplus', cls: h.surplus_status },
+      { val: fmt(h.emergency_fund_target_3mo), lbl: '3-Month Emergency Fund', cls: '', tip: 'Minimum recommended' },
+      { val: fmt(h.emergency_fund_target_6mo), lbl: '6-Month Emergency Fund', cls: '', tip: 'Ideal target' },
+      { val: fmt(h.fire_number), lbl: 'FIRE Number (25×)', cls: '', tip: '25× annual expenses' },
+      { val: h.years_to_fire ? h.years_to_fire + ' yrs' : '—', lbl: 'Years to FIRE', cls: h.years_to_fire && h.years_to_fire < 30 ? 'excellent' : 'fair', tip: 'At 7% return on current savings' },
+    ];
+    $('health-grid').innerHTML = cards.map(c =>
+      `<div class="health-card ${c.cls}" title="${c.tip||''}">
+        <div class="health-card__value">${c.val}</div>
+        <div class="health-card__label">${c.lbl}</div>
+        ${c.tip ? `<div style="font-size:10px;color:var(--text-muted)">${c.tip}</div>` : ''}
+      </div>`
+    ).join('');
+  }
+
+  const METHOD_ICONS = {
+    '50_30_20':    '⚖️',
+    '80_20':       '💰',
+    'zero_based':  '🎯',
+    '60_solution': '📐',
+    'envelope':    '✉️',
+    'reverse':     '🔄',
+  };
+
+  function renderMethods(methods, income) {
+    const keys = Object.keys(methods);
+    const selector = $('method-selector');
+    const container = $('method-detail-container');
+
+    selector.innerHTML = keys.map((k, i) =>
+      `<button type="button" class="method-btn${i===0?' active':''}" data-method="${k}">${METHOD_ICONS[k]||'📊'} ${methods[k].name}</button>`
+    ).join('');
+
+    container.innerHTML = keys.map((k, i) =>
+      `<div class="method-detail${i===0?' active':''}" id="detail-${k}">${buildMethodDetail(k, methods[k], income)}</div>`
+    ).join('');
+
+    selector.querySelectorAll('.method-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        selector.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
+        container.querySelectorAll('.method-detail').forEach(d => d.classList.remove('active'));
+        btn.classList.add('active');
+        const el = $('detail-' + btn.dataset.method);
+        if (el) el.classList.add('active');
+      });
+    });
+  }
+
+  function buildMethodDetail(key, m, income) {
+    let html = `<div style="margin-top:var(--s3);padding:var(--s4);background:var(--bg-input);border:1px solid var(--border);border-radius:var(--r)">`;
+    html += `<div style="font-weight:700;font-size:16px;margin-bottom:6px">${METHOD_ICONS[key]||''} ${m.name}</div>`;
+    html += `<div style="font-size:13px;color:var(--text-muted);margin-bottom:var(--s4)">${m.description}</div>`;
+
+    if (key === '50_30_20' || key === '80_20') {
+      const buckets = key === '50_30_20'
+        ? [
+            { lbl: 'Needs (50%)',    target: m.targets.needs,   allocated: m.allocated.needs,   actual: m.actual.needs,   status: m.status.needs,   fill: 'fill-need',   targetPct: 50 },
+            { lbl: 'Wants (30%)',    target: m.targets.wants,   allocated: m.allocated.wants,   actual: m.actual.wants,   status: m.status.wants,   fill: 'fill-want',   targetPct: 30 },
+            { lbl: 'Savings (20%)', target: m.targets.savings, allocated: m.allocated.savings, actual: m.actual.savings, status: m.status.savings, fill: 'fill-saving', targetPct: 20 },
+          ]
+        : [
+            { lbl: 'Savings (20%)',       target: m.targets.savings,        allocated: m.allocated.savings,        actual: m.actual.savings,        status: m.status.savings,        fill: 'fill-saving', targetPct: 20 },
+            { lbl: 'Everything Else (80%)', target: m.targets.everything_else, allocated: m.allocated.everything_else, actual: m.actual.everything_else, status: m.status.everything_else, fill: 'fill-need',   targetPct: 80 },
+          ];
+
+      html += `<div class="method-bar-row">`;
+      buckets.forEach(b => {
+        const actualPct = income > 0 ? b.actual / income * 100 : 0;
+        const overUnder = b.actual - b.allocated;
+        html += `
+          <div class="method-bar-item">
+            <div class="method-bar-label">
+              <span>${b.lbl}</span>
+              <span>${fmt(b.actual)} <span class="status-badge ${b.status}">${b.status.replace('_',' ')}</span></span>
+            </div>
+            <div class="method-bar-track"><div class="method-bar-fill ${b.fill}" style="width:${Math.min(actualPct/b.targetPct*100,100)}%"></div></div>
+            <div style="font-size:11px;color:var(--text-muted)">Target: ${fmt(b.allocated)} · Actual: ${fmt(b.actual)} · ${overUnder > 0 ? '<span style="color:#ef4444">$'+Math.abs(overUnder).toFixed(0)+' over</span>' : overUnder < 0 ? '<span style="color:#059669">$'+Math.abs(overUnder).toFixed(0)+' under</span>' : 'On target'}</div>
+          </div>`;
+      });
+      html += `</div>`;
+      html += `<div style="margin-top:var(--s3);padding:10px 14px;background:#fff;border:1px solid var(--border);border-radius:var(--r-sm);font-size:13px">
+        <strong>Surplus / Deficit:</strong>
+        <span style="color:${m.surplus_after>=0?'#059669':'#dc2626'};font-weight:700"> ${fmtD(Math.abs(m.surplus_after))} ${m.surplus_after>=0?'surplus':'deficit'}</span>
+      </div>`;
+
+    } else if (key === 'zero_based') {
+      html += `<div class="zbb-bar" style="height:20px;margin-bottom:var(--s3)">`;
+      const p = { need: income>0?m.allocated.needs/income*100:0, want: income>0?m.allocated.wants/income*100:0, saving: income>0?m.allocated.savings/income*100:0 };
+      html += `<div class="zbb-segment" style="width:${p.need}%;background:#3b82f6"></div>`;
+      html += `<div class="zbb-segment" style="width:${p.want}%;background:#f59e0b"></div>`;
+      html += `<div class="zbb-segment" style="width:${p.saving}%;background:#10b981"></div>`;
+      const rem = Math.max(100 - p.need - p.want - p.saving, 0);
+      if (rem > 0) html += `<div class="zbb-segment" style="width:${rem}%;background:#e5e7eb"></div>`;
+      html += `</div>`;
+      html += `<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--s2);margin-bottom:var(--s3)">
+        <div class="summary-card"><div class="summary-card__val" style="color:#3b82f6">${fmt(m.allocated.needs)}</div><div class="summary-card__lbl">Needs</div></div>
+        <div class="summary-card"><div class="summary-card__val" style="color:#f59e0b">${fmt(m.allocated.wants)}</div><div class="summary-card__lbl">Wants</div></div>
+        <div class="summary-card"><div class="summary-card__val" style="color:#10b981">${fmt(m.allocated.savings)}</div><div class="summary-card__lbl">Savings</div></div>
+      </div>`;
+      const unassigned = m.unassigned;
+      html += `<div style="padding:10px 14px;background:${unassigned===0?'#d1fae5':unassigned>0?'#fef3c7':'#fee2e2'};border-radius:var(--r-sm);font-size:13px">
+        ${unassigned===0 ? '✅ <strong>Perfect ZBB:</strong> Every dollar assigned.' : unassigned>0 ? '⚠️ <strong>'+fmtD(unassigned)+' unassigned.</strong> Add a savings goal or spending category.' : '🔴 <strong>'+fmtD(Math.abs(unassigned))+' over budget.</strong> Reduce expenses.'}
+      </div>`;
+
+    } else if (key === '60_solution') {
+      const rows = [
+        { lbl: 'Committed Expenses (60%)', tgt: 60, actual: m.actual.committed, alloc: m.allocated.committed, color: '#3b82f6' },
+        { lbl: 'Savings Goal (30% split)', tgt: 30, actual: m.actual.savings,   alloc: m.allocated.retirement + m.allocated.long_term + m.allocated.short_term, color: '#10b981' },
+        { lbl: 'Fun Money (10%)',           tgt: 10, actual: m.actual.fun,       alloc: m.allocated.fun,       color: '#f59e0b' },
+      ];
+      html += `<div class="method-bar-row">`;
+      rows.forEach(r => {
+        const aPct = income > 0 ? r.actual / income * 100 : 0;
+        html += `<div class="method-bar-item">
+          <div class="method-bar-label"><span>${r.lbl}</span><span>${fmt(r.actual)} / ${fmt(r.alloc)} target</span></div>
+          <div class="method-bar-track"><div class="method-bar-fill" style="width:${Math.min(aPct/r.tgt*100,100)}%;background:${r.color}"></div></div>
+          <div style="font-size:11px;color:var(--text-muted)">Actual: ${pct(aPct)} of income</div>
+        </div>`;
+      });
+      html += `</div>`;
+      html += `<div style="margin-top:var(--s3);font-size:12px;color:var(--text-muted)">Your committed expenses are <strong>${pct(m.committed_pct)}</strong> of income. 60% Solution works best when this stays at or below 60%.</div>`;
+
+    } else if (key === 'envelope') {
+      html += `<div class="envelope-list">`;
+      m.envelopes.forEach(env => {
+        const dotColor = BUCKET_COLORS[env.bucket] || '#6b7280';
+        html += `<div class="envelope-item">
+          <span class="envelope-item__name"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${dotColor};margin-right:6px"></span>${env.name}</span>
+          <span class="envelope-item__amount">${fmt(env.amount)}</span>
+        </div>`;
+      });
+      html += `</div>`;
+      html += `<div style="margin-top:var(--s3);padding:10px 14px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--r-sm);font-size:13px">
+        <strong>${m.envelopes.length} envelopes</strong> · Total: ${fmt(m.total_envelopes)}
+        ${m.surplus_after > 0 ? ` · <span style="color:#059669">${fmt(m.surplus_after)} unallocated — create a new envelope!</span>` : ''}
+        ${m.surplus_after < 0 ? ` · <span style="color:#dc2626">${fmt(Math.abs(m.surplus_after))} over budget — reduce an envelope.</span>` : ''}
+      </div>`;
+
+    } else if (key === 'reverse') {
+      html += `<div class="step-flow">`;
+      m.steps.forEach((s, i) => {
+        const cls = i === 0 ? 'income' : i < m.steps.length - 1 ? 'subtract' : (s.amount >= 0 ? 'result-pos' : 'result-neg');
+        html += `<div class="step-item ${cls}">
+          <span>Step ${s.step}: ${s.label}</span>
+          <span style="font-weight:700">${s.amount < 0 ? '−' : ''}${fmt(Math.abs(s.amount))}</span>
+        </div>`;
+      });
+      html += `</div>`;
+      const gf = m.guilt_free_spending;
+      html += `<div style="margin-top:var(--s3);font-size:13px;color:var(--text-muted)">
+        Your guilt-free spending is <strong style="color:${gf>=0?'#059669':'#dc2626'}">${fmt(Math.abs(gf))}${gf<0?' (deficit — reduce fixed expenses)':''}</strong>.
+        ${gf > 0 ? 'Spend this however you like — no tracking needed.' : ''}
+      </div>`;
+    }
+
+    html += `</div>`;
+    return html;
+  }
+
+  function renderBreakdown(d) {
+    const inc = d.income.total;
+    const list = d.expenses.breakdown;
+    $('breakdown-list').innerHTML = list.map(item =>
+      `<div class="breakdown-row">
+        <div class="breakdown-dot" style="background:${BUCKET_COLORS[item.bucket]||'#6b7280'}"></div>
+        <div class="breakdown-label">${item.label}</div>
+        <div class="breakdown-pct">${inc > 0 ? pct(item.amount/inc*100) : ''}</div>
+        <div class="breakdown-amount">${fmt(item.amount)}</div>
+      </div>`
+    ).join('') || '<div style="color:var(--text-muted);font-size:13px">No expenses entered.</div>';
+
+    const buckets = [
+      { key: 'need',   lbl: 'Needs',    val: d.expenses.needs,   color: '#3b82f6' },
+      { key: 'want',   lbl: 'Wants',    val: d.expenses.wants,   color: '#f59e0b' },
+      { key: 'saving', lbl: 'Savings',  val: d.expenses.savings, color: '#10b981' },
+      { key: 'debt',   lbl: 'Debt',     val: d.expenses.debt,    color: '#ef4444' },
+    ];
+    $('bucket-breakdown').innerHTML = buckets.map(b =>
+      `<div class="breakdown-row">
+        <div class="breakdown-dot" style="background:${b.color}"></div>
+        <div class="breakdown-label">${b.lbl}</div>
+        <div class="breakdown-pct">${inc > 0 ? pct(b.val/inc*100) : ''}</div>
+        <div class="breakdown-amount">${fmt(b.val)}</div>
+      </div>`
+    ).join('');
+  }
+})();
+</script>
+{% endblock %}

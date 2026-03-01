@@ -15,12 +15,16 @@ def create_app():
     from calculators.debt import debt_bp
     from calculators.tax import tax_bp
     from calculators.specialized import specialized_bp
+    from calculators.blog import blog_bp
+    from calculators.budget import budget_bp
 
     app.register_blueprint(mortgage_bp)
     app.register_blueprint(investment_bp)
     app.register_blueprint(debt_bp)
     app.register_blueprint(tax_bp)
     app.register_blueprint(specialized_bp)
+    app.register_blueprint(blog_bp)
+    app.register_blueprint(budget_bp)
 
     # ── Homepage ───────────────────────────────────────────────────────────
     @app.route("/")

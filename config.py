@@ -296,4 +296,7 @@ SITEMAP_PAGES = [
     ("/specialized/inflation", 0.8, "monthly"),
     ("/specialized/rule-of-72", 0.8, "monthly"),
     ("/specialized/latte-factor", 0.8, "monthly"),
+    ("/budget", 0.9, "monthly"),
+    ("/blog", 0.9, "weekly"),
+    ("/blog/how-to-become-financially-independent-as-a-student", 0.9, "monthly"),
 ]
