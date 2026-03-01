@@ -18,8 +18,9 @@
   </script>
 
   <!-- Primary SEO -->
-  <title>{% block title %}Free Financial Calculators — Mortgage, Investment, Tax | FinWise{% endblock %}</title>
-  <meta name="description" content="{% block meta_description %}Free financial calculators for mortgage payments, compound interest, retirement planning, taxes, and debt management. Covering US, EU, UK, India &amp; Asia.{% endblock %}">
+  <title>{% block title %}Free Financial Calculators — Mortgage, Tax & Debt | FinWise{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}18 free financial calculators for US, UK, EU, India &amp; Asia. Mortgage, compound interest, retirement, taxes, credit card payoff &amp; more. No login.{% endblock %}">
+  <meta name="keywords" content="{% block meta_keywords %}financial calculators, mortgage calculator, compound interest calculator, retirement calculator, income tax calculator, debt payoff calculator, budget planner, FIRE calculator, SIP calculator, student loan calculator, credit card payoff, investment calculator{% endblock %}">
   <link rel="canonical" href="{{ site_url }}{% block canonical_path %}/{% endblock %}">
 
   <!-- Open Graph -->
@@ -39,18 +40,32 @@
   <!-- JSON-LD Structured Data -->
   {% block json_ld %}
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "{{ site_name }}",
-    "url": "{{ site_url }}",
-    "description": "Free financial calculators for mortgage, investment, tax, and debt management across US, EU, UK, India and Asia.",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "{{ site_url }}/?q={search_term_string}",
-      "query-input": "required name=search_term_string"
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "{{ site_name }}",
+      "url": "{{ site_url }}",
+      "description": "18 free financial calculators for mortgage, investment, tax, and debt management across US, UK, EU, India and Asia.",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "{{ site_url }}/?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "{{ site_name }}",
+      "url": "{{ site_url }}",
+      "logo": "{{ site_url }}/static/img/og-default.png",
+      "description": "Free financial calculators for mortgage, investment, tax, and debt management. Covering US, UK, EU, India and Asia.",
+      "foundingDate": "2024",
+      "areaServed": ["US", "GB", "EU", "IN", "SG", "JP"],
+      "serviceType": "Financial Calculator Tools",
+      "knowsAbout": ["Mortgage Calculators", "Investment Calculators", "Tax Calculators", "Debt Management", "Budget Planning", "Retirement Planning", "FIRE Movement", "SIP Investments"]
     }
-  }
+  ]
   </script>
   {% endblock %}
 
@@ -197,6 +212,16 @@
           Fin<span class="accent">Wise</span>
         </a>
         <p>Free, accurate financial calculators for the US, UK, EU, India &amp; Asia. No sign-up, no ads, just math.</p>
+        <div style="display:flex;gap:12px;margin-top:12px">
+          <a href="https://www.facebook.com/finwisecalculators" target="_blank" rel="noopener noreferrer" aria-label="FinWise on Facebook" style="color:var(--text-muted);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            Facebook
+          </a>
+          <a href="https://x.com/finwisecalc" target="_blank" rel="noopener noreferrer" aria-label="FinWise on X" style="color:var(--text-muted);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:5px">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            X (Twitter)
+          </a>
+        </div>
       </div>
       <div>
         <div class="footer__col-title">Mortgage</div>
